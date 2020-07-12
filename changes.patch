@@ -1,0 +1,111 @@
+diff --git a/Objects/dictobject.c b/Objects/dictobject.c
+index b1f11b3e69..b1b6c30466 100644
+--- a/Objects/dictobject.c
++++ b/Objects/dictobject.c
+@@ -4107,6 +4107,79 @@ dictview_len(_PyDictViewObject *dv)
+     return len;
+ }
+ 
++
++PyObject * _dictview_getitem_ma_unsafe(_PyDictViewObject *dv, size_t index) {
++    PyObject *key, *value, *result;
++    PyDictObject *dict = dv->dv_dict;
++
++    if (PyDictKeys_Check(dv)) {
++        result = DK_ENTRIES(dict->ma_keys)[index].me_key;
++        Py_INCREF(result);
++    }
++    else if (PyDictValues_Check(dv))
++    {
++        result = dict->ma_values[index];
++        Py_INCREF(result);
++    } else {
++        result = PyTuple_New(2);
++        key = DK_ENTRIES(dict->ma_keys)[index].me_key;
++        value = dict->ma_values[index];
++        Py_INCREF(key);
++        Py_INCREF(value);
++        PyTuple_SET_ITEM(result, 0, key);
++        PyTuple_SET_ITEM(result, 1, value);
++    }
++    return result;
++}
++
++static PyObject *dv_indexerr = NULL;
++
++PyObject * dictview_getitem(_PyDictViewObject *dv, Py_ssize_t index)
++{
++    PyObject *result;
++    PyDictObject *dict = dv->dv_dict;
++
++    if ((size_t) index >= (size_t) dict->ma_used) {
++        if (dv_indexerr == NULL) {
++            dv_indexerr = PyUnicode_FromString(
++                "index out of range");
++            if (dv_indexerr == NULL)
++                return NULL;
++        }
++        PyErr_SetObject(PyExc_IndexError, dv_indexerr);
++        return NULL;
++    }
++
++    if (_PyDict_HasSplitTable(dict)) {
++        return _dictview_getitem_ma_unsafe(dv, index);
++    }
++
++    PyDictKeyEntry *entry_ptr = DK_ENTRIES(dict->ma_keys);
++    while(index) {
++        if (entry_ptr != NULL) {
++            index--;
++        }
++        entry_ptr++;
++    }
++
++    if (PyDictKeys_Check(dv)) {
++        result = entry_ptr->me_key;
++        Py_INCREF(result);
++    }
++    else if (PyDictValues_Check(dv))
++    {
++        result = entry_ptr->me_value;
++        Py_INCREF(result);
++    } else {
++        result = PyTuple_New(2);
++        Py_INCREF(entry_ptr->me_key);
++        Py_INCREF(entry_ptr->me_value);
++        PyTuple_SetItem(result, 0, entry_ptr->me_key);
++        PyTuple_SetItem(result, 1, entry_ptr->me_value);
++    }
++    return result;
++}
++
+ PyObject *
+ _PyDictView_New(PyObject *dict, PyTypeObject *type)
+ {
+@@ -4287,7 +4360,7 @@ static PySequenceMethods dictkeys_as_sequence = {
+     (lenfunc)dictview_len,              /* sq_length */
+     0,                                  /* sq_concat */
+     0,                                  /* sq_repeat */
+-    0,                                  /* sq_item */
++    (ssizeargfunc)dictview_getitem,     /* sq_item */
+     0,                                  /* sq_slice */
+     0,                                  /* sq_ass_item */
+     0,                                  /* sq_ass_slice */
+@@ -4716,7 +4789,7 @@ static PySequenceMethods dictitems_as_sequence = {
+     (lenfunc)dictview_len,              /* sq_length */
+     0,                                  /* sq_concat */
+     0,                                  /* sq_repeat */
+-    0,                                  /* sq_item */
++    (ssizeargfunc)dictview_getitem,     /* sq_item */
+     0,                                  /* sq_slice */
+     0,                                  /* sq_ass_item */
+     0,                                  /* sq_ass_slice */
+@@ -4799,7 +4872,7 @@ static PySequenceMethods dictvalues_as_sequence = {
+     (lenfunc)dictview_len,              /* sq_length */
+     0,                                  /* sq_concat */
+     0,                                  /* sq_repeat */
+-    0,                                  /* sq_item */
++    (ssizeargfunc)dictview_getitem,     /* sq_item */
+     0,                                  /* sq_slice */
+     0,                                  /* sq_ass_item */
+     0,                                  /* sq_ass_slice */
