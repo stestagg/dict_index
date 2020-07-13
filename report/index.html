@@ -1,0 +1,23 @@
+<!doctype html>
+
+<body>
+	<h1>Dict views index performance comparison</h1>
+
+	<ul>
+
+		{% for result in results|sort(attribute='time', reverse=True) %}
+			<li>
+				<a href="{{ result.name}}.html">
+					{{ result.time|date }} 
+					- {{result.platform.python_revision}} 
+					- {{ result.platform.processor }}
+					- {{result.platform.python_compiler}}
+					- {{ result.platform.memory.total|filesizeformat}} ram
+				</a>
+			</li>
+		{% endfor %}
+
+	</ul>
+
+</body>
+

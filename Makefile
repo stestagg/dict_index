@@ -3,9 +3,14 @@ PYROOT = ${HERE}/python
 PYROOT_L = $(notdir ${PYROOT})
 
 
-results/%.json: ${PYROOT_L}/bin/python3
-	${PYROOT}/bin/python3 ${PYROOT}/bin/pip3 install -r requirements.txt
+results/%.json: ${PYROOT_L}/bin/python3 .has-requirements
 	env PYTHONPATH=. ${PYROOT}/bin/python3 benchmark/main.py > results/$*.json
+
+
+.has-requirements: ${PYROOT_L}/bin/python3 requirements.txt
+	${PYROOT}/bin/pip3 install -r requirements.txt
+	touch .has-requirements
+
 
 
 ${PYROOT_L}/bin/python3:  cpython/.ispatched

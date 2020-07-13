@@ -1,0 +1,158 @@
+<!doctype html>
+
+<head>
+	<style>
+		.methods {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-around;
+		}
+
+		.methods .method {
+			box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
+			background: #272822;
+			border-radius: 5px;
+			margin: 10px;
+		}
+		.method .defn{
+			padding: 10px;
+			margin: 0;
+		}
+		pre{ margin:0;}
+		.method .name {
+			padding: 10px;
+			background: #eee;
+		}
+
+		.graph {
+			width: 800px;
+			height: 600px;
+			margin: auto;
+		}
+		.graph.loading{
+			background: #eee;
+			box-shadow: 0 0 30px inset rgba(0,0,0, 0.3);
+			text-align: center;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+		}
+		.graph.loading::after{
+			content: "Loading";
+			font-style: italic;
+
+		}
+
+		{{style}}
+	</style>
+</head>
+
+<body>
+	<h1>Dict views index performance comparison - Results</h1>
+
+	<a href="./">Return to listing</a>
+
+	<h3>Test Environment</h3>
+	<table>
+		<thead>
+			<tr>
+				<th>Property</th>
+				<th>Value</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Run Time</td>
+				<td>{{ results.time|date('YYYY-MM-DD hh:mm:ss') }}</td>
+			</tr>
+			{% for key, value in results.platform.items() %}
+				<tr>
+					<td>{{ key }}</td>
+					<td>
+						{% if key == 'memory' %}
+							Total: <b>{{ value.total|filesizeformat }}</b>
+							Available at start: <b>{{ value.available|filesizeformat }}</b>
+						{% else %}
+							<b>{{ value }}</b>
+						{% endif %}
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<h3>Tests</h3>
+
+	{% for cls_name, info in results.tests.items() %}
+
+	<h4>{{ info.name }}</h4>
+
+	Best of <b>{{ info.num_runs }}</b> runs, over dictionaries with <b>{{ info.variants|min|num }} - {{ info.variants|max|num }}</b> items.
+
+	<div class=methods>
+		{% for meth_name, method in info.methods.items() %}
+		<div class=method>
+			<div class=name>{{ meth_name }}</div>
+			<div class=defn>{{ method|dedent|code }}</div>
+		</div>
+		{% endfor %}
+	</div>
+
+	<div class="graph loading" id="graph-{{cls_name}}"></div>
+	{% endfor %}
+
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+<script>
+
+	const chart_data = {{ chart_data|tojson }};
+
+	document.addEventListener('DOMContentLoaded', function() {
+		chart_data.forEach(function(data) {
+			const element_id = 'graph-' + data.cls;
+			document.getElementById(element_id).classList.remove('loading');
+			const chart = new CanvasJS.Chart(element_id, {
+				axisX:{
+					logarithmic: true,
+					titleFontSize: 14,
+					title: "Items in dict", 
+					labelFontSize: 12
+				},
+				axisY:{
+					titleFontSize: 14,
+					title: "Runtime (ms)", 
+					labelFontSize: 12
+				},
+    			legend: {
+                	cursor: "pointer",
+                	fontSize: 13,
+	                itemclick: function (e) {
+	                	const companion_name = e.dataSeries.name + ".runs";
+	                	const companion_series = e.chart.data.filter(function(ds) { 
+	                		return ds.name == companion_name 
+	                	})[0];
+
+	                	const is_visible = (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible);
+	                	const visibility = is_visible ? false : true;
+
+	                    e.dataSeries.visible = visibility;
+	                    if (companion_series) {
+	                    	companion_series.set('visible', visibility);
+	                    }
+	                    e.chart.render();
+	                }
+            	},
+				
+
+				data: data.series
+
+			});
+			chart.render();
+		});
+	});
+
+</script>
+
+</body>
+
