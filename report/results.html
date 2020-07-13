@@ -82,6 +82,18 @@
 			box-shadow: 3px 3px 4px rgba(0,0,0,0.15);
 		}
 
+		#graphmenu {
+			background: #666;
+			color: white;
+			position: fixed;
+			top: 0;
+			right: 20px;
+			padding: 0 10px;
+		}
+		#graphmenu label{
+			margin: 10px;
+		}
+
 		{{style}}
 	</style>
 </head>
@@ -90,6 +102,17 @@
 	<h1>Dict views index performance comparison - Results</h1>
 
 	<a href="./">Return to listing</a>
+
+	<div id="graphmenu">
+		<label>
+			<input type=checkbox id="x-log-check" checked>
+			X-Log
+		</label>
+		<label>
+			<input type=checkbox id="y-log-check" checked>
+			Y-Log
+		</label>
+	</div>
 
 	<h3>Overview</h3>
 
@@ -175,6 +198,7 @@
 <script>
 
 	const chart_data = {{ chart_data|tojson }};
+	const charts = [];
 
 	document.addEventListener('DOMContentLoaded', function() {
 		chart_data.forEach(function(data) {
@@ -188,6 +212,7 @@
 					labelFontSize: 12
 				},
 				axisY:{
+					logarithmic: true,
 					titleFontSize: 14,
 					title: "Runtime (ms)", 
 					labelFontSize: 12
@@ -217,7 +242,22 @@
 
 			});
 			chart.render();
+			charts.push(chart);
 		});
+	});
+
+	const x_log = document.getElementById('x-log-check');
+	x_log.addEventListener('change', function(e) {
+		charts.forEach(function(chart) {
+			chart.axisX[0].set('logarithmic', x_log.checked);
+		})
+	});
+
+	const y_log = document.getElementById('y-log-check');
+	y_log.addEventListener('change', function(e) {
+		charts.forEach(function(chart) {
+			chart.axisY[0].set('logarithmic', y_log.checked);
+		})
 	});
 
 </script>

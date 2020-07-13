@@ -1,0 +1,630 @@
+<!doctype html>
+
+<head>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet"> 
+	<style>
+		body{
+			font-family: 'Noto Sans JP', sans-serif;
+		}
+
+		table,td,th{
+			border-collapse: collapse;			
+			border: 1px solid #aaa;
+			text-align: left;
+		}
+		td,th{
+			padding: 2px 7px;
+		}
+		th{
+			background: #888;
+			color: white;
+			font-weight: bold;
+		}
+
+		.methods {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-around;
+		}
+
+		.methods .method {
+			box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
+			border-radius: 5px;
+			margin: 10px;
+			background: white;
+			display: flex;
+			flex-direction: column;
+		}
+		.method .defn{
+			padding: 10px;
+			margin: 0;
+			background: #272822;
+			flex-grow: 1;
+			border-bottom-left-radius: 5px;
+			border-bottom-right-radius: 5px;
+		}
+		pre{
+			margin:0;
+			background: #272822;
+		}
+		.method .name {
+			padding: 10px;
+			border-top-left-radius: 5px;
+			border-top-right-radius: 5px;
+		}
+
+		.graph {
+			width: 800px;
+			height: 600px;
+			margin: auto;
+			box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
+		}
+		.graph.loading{
+			background: #eee;
+			box-shadow: 0 0 30px inset rgba(0,0,0, 0.3);
+			text-align: center;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+		}
+		.graph.loading::after{
+			content: "Loading";
+			font-style: italic;
+
+		}
+
+		.test {
+			background: #eee;
+			padding: 5px;
+			box-sizing: border-box;
+			margin: 20px 10px;
+			box-shadow: 3px 3px 4px rgba(0,0,0,0.15);
+		}
+
+		#graphmenu {
+			background: #666;
+			color: white;
+			position: fixed;
+			top: 0;
+			right: 20px;
+			padding: 0 10px;			
+		}
+		#graphmenu label{
+			margin: 10px;
+		}
+
+		.hll { background-color: #49483e }
+.c { color: #75715e } /* Comment */
+.err { color: #960050; background-color: #1e0010 } /* Error */
+.k { color: #66d9ef } /* Keyword */
+.l { color: #ae81ff } /* Literal */
+.n { color: #f8f8f2 } /* Name */
+.o { color: #f92672 } /* Operator */
+.p { color: #f8f8f2 } /* Punctuation */
+.ch { color: #75715e } /* Comment.Hashbang */
+.cm { color: #75715e } /* Comment.Multiline */
+.cp { color: #75715e } /* Comment.Preproc */
+.cpf { color: #75715e } /* Comment.PreprocFile */
+.c1 { color: #75715e } /* Comment.Single */
+.cs { color: #75715e } /* Comment.Special */
+.gd { color: #f92672 } /* Generic.Deleted */
+.ge { font-style: italic } /* Generic.Emph */
+.gi { color: #a6e22e } /* Generic.Inserted */
+.gs { font-weight: bold } /* Generic.Strong */
+.gu { color: #75715e } /* Generic.Subheading */
+.kc { color: #66d9ef } /* Keyword.Constant */
+.kd { color: #66d9ef } /* Keyword.Declaration */
+.kn { color: #f92672 } /* Keyword.Namespace */
+.kp { color: #66d9ef } /* Keyword.Pseudo */
+.kr { color: #66d9ef } /* Keyword.Reserved */
+.kt { color: #66d9ef } /* Keyword.Type */
+.ld { color: #e6db74 } /* Literal.Date */
+.m { color: #ae81ff } /* Literal.Number */
+.s { color: #e6db74 } /* Literal.String */
+.na { color: #a6e22e } /* Name.Attribute */
+.nb { color: #f8f8f2 } /* Name.Builtin */
+.nc { color: #a6e22e } /* Name.Class */
+.no { color: #66d9ef } /* Name.Constant */
+.nd { color: #a6e22e } /* Name.Decorator */
+.ni { color: #f8f8f2 } /* Name.Entity */
+.ne { color: #a6e22e } /* Name.Exception */
+.nf { color: #a6e22e } /* Name.Function */
+.nl { color: #f8f8f2 } /* Name.Label */
+.nn { color: #f8f8f2 } /* Name.Namespace */
+.nx { color: #a6e22e } /* Name.Other */
+.py { color: #f8f8f2 } /* Name.Property */
+.nt { color: #f92672 } /* Name.Tag */
+.nv { color: #f8f8f2 } /* Name.Variable */
+.ow { color: #f92672 } /* Operator.Word */
+.w { color: #f8f8f2 } /* Text.Whitespace */
+.mb { color: #ae81ff } /* Literal.Number.Bin */
+.mf { color: #ae81ff } /* Literal.Number.Float */
+.mh { color: #ae81ff } /* Literal.Number.Hex */
+.mi { color: #ae81ff } /* Literal.Number.Integer */
+.mo { color: #ae81ff } /* Literal.Number.Oct */
+.sa { color: #e6db74 } /* Literal.String.Affix */
+.sb { color: #e6db74 } /* Literal.String.Backtick */
+.sc { color: #e6db74 } /* Literal.String.Char */
+.dl { color: #e6db74 } /* Literal.String.Delimiter */
+.sd { color: #e6db74 } /* Literal.String.Doc */
+.s2 { color: #e6db74 } /* Literal.String.Double */
+.se { color: #ae81ff } /* Literal.String.Escape */
+.sh { color: #e6db74 } /* Literal.String.Heredoc */
+.si { color: #e6db74 } /* Literal.String.Interpol */
+.sx { color: #e6db74 } /* Literal.String.Other */
+.sr { color: #e6db74 } /* Literal.String.Regex */
+.s1 { color: #e6db74 } /* Literal.String.Single */
+.ss { color: #e6db74 } /* Literal.String.Symbol */
+.bp { color: #f8f8f2 } /* Name.Builtin.Pseudo */
+.fm { color: #a6e22e } /* Name.Function.Magic */
+.vc { color: #f8f8f2 } /* Name.Variable.Class */
+.vg { color: #f8f8f2 } /* Name.Variable.Global */
+.vi { color: #f8f8f2 } /* Name.Variable.Instance */
+.vm { color: #f8f8f2 } /* Name.Variable.Magic */
+.il { color: #ae81ff } /* Literal.Number.Integer.Long */
+	</style>
+</head>
+
+<body>
+	<h1>Dict views index performance comparison - Results</h1>
+
+	<a href="./">Return to listing</a>
+
+	<div id="graphmenu">
+		<label>
+			<input type=checkbox id="x-log-check" checked>
+			X-Log
+		</label>
+		<label>
+			<input type=checkbox id="y-log-check" checked>
+			Y-Log
+		</label>
+	</div>
+
+	<h3>Overview</h3>
+
+	<p>The following tests are designed to assess the performance of a proposed change to the python core language to support direct indexing of dict_keys, dict_items and dict_views objects.</p>
+
+	<p>The change would allow the results of dict.keys(), dict.items() and dict.values() to behave much more like lists.</p>
+
+	<p>Currently, it's only possible to implement dictionary indexing in O(n) time, as dict deletions leave 'holes' in the compact in-memory dictionary structure.  This linear cost, however, is not large.</p>
+
+	<p>The following graphs show the time taken for python to evaluate several variations of a number of simple dictionary operations.  These examples are designed to be instuctive, and representative of only the simplest operations.</p>
+
+	<p>
+		Some of the code being tested is code that should never be used in real code, as it exhibits strongly non-linear performance characteristics. They have been included her to demonstrate this fact.
+	</p>
+
+	<p>
+		If there are any examples missing, or alternate syntaxes that may be more performant, please submit an issue or pull request here: <a href="https://github.com/stestagg/dict_index">github.com/stestagg/dict_index</a>
+	</p>
+
+	<p>Code annotated with "(*)" are snippets that do not run without the patches included in this change.  They demonstrate the performance of allowing direct indexing of dict views.</p>
+
+
+
+	<h3>Test Environment</h3>
+	<table>
+		<thead>
+			<tr>
+				<th>Property</th>
+				<th>Value</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Run Time</td>
+				<td>2020-07-12 22:11:10</td>
+			</tr>
+			
+				<tr>
+					<td>memory</td>
+					<td>
+						
+							Total: <b>16.7 GB</b>
+							Available at start: <b>14.7 GB</b>
+						
+					</td>
+				</tr>
+			
+				<tr>
+					<td>release</td>
+					<td>
+						
+							<b>5.7.6-arch1-1</b>
+						
+					</td>
+				</tr>
+			
+				<tr>
+					<td>system</td>
+					<td>
+						
+							<b>Linux</b>
+						
+					</td>
+				</tr>
+			
+				<tr>
+					<td>processor</td>
+					<td>
+						
+							<b>AMD Ryzen 5 3600 6-Core Processor</b>
+						
+					</td>
+				</tr>
+			
+				<tr>
+					<td>python_compiler</td>
+					<td>
+						
+							<b>GCC 10.1.0</b>
+						
+					</td>
+				</tr>
+			
+				<tr>
+					<td>python_build</td>
+					<td>
+						
+							<b>[&#39;heads/master-dirty:b0689ae7f9&#39;, &#39;Jul 12 2020 23:01:33&#39;]</b>
+						
+					</td>
+				</tr>
+			
+				<tr>
+					<td>python_implementation</td>
+					<td>
+						
+							<b>CPython</b>
+						
+					</td>
+				</tr>
+			
+				<tr>
+					<td>python_revision</td>
+					<td>
+						
+							<b>b0689ae7f9</b>
+						
+					</td>
+				</tr>
+			
+		</tbody>
+	</table>
+
+	<h3>Tests</h3>
+
+	<ul>
+		
+			<li><a href="#GetFirstKey">Get first key</a></li>
+		
+			<li><a href="#GetLastKey">Get last key</a></li>
+		
+			<li><a href="#IterKeys">Iterate over all keys</a></li>
+		
+			<li><a href="#IterItems">Iterate over all items</a></li>
+		
+
+	</ul>
+
+	
+	<div class="test">
+		<h4><a name="GetFirstKey">Get first key</a></h4>
+
+		Best of <b>10</b> runs, over dictionaries with <b>1 - 50,000,000</b> items.
+
+		<div class=methods>
+			
+			<div class=method>
+				<div class=name>use_list</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
+<span class="k">def</span> <span class="nf">use_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calling list on the dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>use_iter</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
+<span class="k">def</span> <span class="nf">use_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calling iter on the keys</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>proposed(*)</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
+<span class="k">def</span> <span class="nf">proposed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Using keys indexing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+			</div>
+			
+		</div>
+
+		<div class="graph loading" id="graph-GetFirstKey"></div>
+	</div>
+	
+	<div class="test">
+		<h4><a name="GetLastKey">Get last key</a></h4>
+
+		Best of <b>10</b> runs, over dictionaries with <b>1 - 50,000,000</b> items.
+
+		<div class=methods>
+			
+			<div class=method>
+				<div class=name>use_list</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
+<span class="k">def</span> <span class="nf">use_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>use_iter</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
+<span class="k">def</span> <span class="nf">use_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>proposed(*)</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
+<span class="k">def</span> <span class="nf">proposed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+			</div>
+			
+		</div>
+
+		<div class="graph loading" id="graph-GetLastKey"></div>
+	</div>
+	
+	<div class="test">
+		<h4><a name="IterKeys">Iterate over all keys</a></h4>
+
+		Best of <b>10</b> runs, over dictionaries with <b>1 - 50,000,000</b> items.
+
+		<div class=methods>
+			
+			<div class=method>
+				<div class=name>list_index</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
+<span class="k">def</span> <span class="nf">list_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This is a bad way of doing this &quot;&quot;&quot;</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)):</span>
+        <span class="n">last_key</span> <span class="o">=</span> <span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">last_key</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>list_iter</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
+<span class="k">def</span> <span class="nf">list_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This is a bad way of doing this &quot;&quot;&quot;</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="n">last_key</span> <span class="o">=</span> <span class="n">key</span>
+    <span class="k">return</span> <span class="n">last_key</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>direct_iter</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
+<span class="k">def</span> <span class="nf">direct_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">last_key</span> <span class="o">=</span> <span class="n">key</span>
+    <span class="k">return</span> <span class="n">last_key</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>keys_index(*)</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
+<span class="k">def</span> <span class="nf">keys_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Using keys indexing. This approach is *not* recommended,</span>
+<span class="sd">    but included here to assess the performance of sitations</span>
+<span class="sd">    where this may be done in &#39;error&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)):</span>
+        <span class="n">last_key</span> <span class="o">=</span> <span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">last_key</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>iter_keys</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
+<span class="k">def</span> <span class="nf">iter_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Using the sensible iter()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="n">last_key</span> <span class="o">=</span> <span class="n">key</span>
+    <span class="k">return</span> <span class="n">last_key</span>
+</pre></div>
+</div>
+			</div>
+			
+		</div>
+
+		<div class="graph loading" id="graph-IterKeys"></div>
+	</div>
+	
+	<div class="test">
+		<h4><a name="IterItems">Iterate over all items</a></h4>
+
+		Best of <b>10</b> runs, over dictionaries with <b>1 - 50,000,000</b> items.
+
+		<div class=methods>
+			
+			<div class=method>
+				<div class=name>list_index</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
+<span class="k">def</span> <span class="nf">list_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This is a bad way of doing this &quot;&quot;&quot;</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)):</span>
+        <span class="n">last_item</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">last_item</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>list_iter</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
+<span class="k">def</span> <span class="nf">list_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This is a bad way of doing this &quot;&quot;&quot;</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+        <span class="n">last_item</span> <span class="o">=</span> <span class="n">item</span>
+    <span class="k">return</span> <span class="n">last_item</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>direct_iter</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
+<span class="k">def</span> <span class="nf">direct_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">last_item</span> <span class="o">=</span> <span class="n">item</span>
+    <span class="k">return</span> <span class="n">last_item</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>items_index(*)</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
+<span class="k">def</span> <span class="nf">items_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Using items indexing. This approach is *not* recommended,</span>
+<span class="sd">    but included here to assess the performance of sitations</span>
+<span class="sd">    where this may be done in &#39;error&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)):</span>
+        <span class="n">last_item</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">last_item</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>iter_items</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
+<span class="k">def</span> <span class="nf">iter_items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Using the sensible iter()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+        <span class="n">last_item</span> <span class="o">=</span> <span class="n">item</span>
+    <span class="k">return</span> <span class="n">last_item</span>
+</pre></div>
+</div>
+			</div>
+			
+		</div>
+
+		<div class="graph loading" id="graph-IterItems"></div>
+	</div>
+	
+
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+<script>
+
+	const chart_data = [{"cls": "IterItems", "series": [{"color": "#1f77b4", "dataPoints": [{"x": 10000000, "y": 205.9439239965286}, {"x": 10000000, "y": 209.60381400072947}, {"x": 10000000, "y": 209.23563399992418}, {"x": 10000000, "y": 203.94603299791925}, {"x": 10000000, "y": 224.0437029977329}, {"x": 10000000, "y": 214.8824930045521}, {"x": 10000000, "y": 208.31660900148563}, {"x": 10000000, "y": 208.14022100239526}, {"x": 10000000, "y": 210.92477300408063}, {"x": 10000000, "y": 213.6709830010659}, {"x": 100000, "y": 2.2281479978119023}, {"x": 100000, "y": 2.0864770049229264}, {"x": 100000, "y": 2.295149002748076}, {"x": 100000, "y": 2.3983100036275573}, {"x": 100000, "y": 2.2674490028293803}, {"x": 100000, "y": 2.3067889997037128}, {"x": 100000, "y": 2.3232789972098544}, {"x": 100000, "y": 2.2510089984280057}, {"x": 100000, "y": 2.231628997833468}, {"x": 100000, "y": 2.3604500020155683}, {"x": 10000, "y": 0.21021200518589467}, {"x": 10000, "y": 0.21383100101957098}, {"x": 10000, "y": 0.21531200036406517}, {"x": 10000, "y": 0.20874100300716236}, {"x": 10000, "y": 0.20974200015189126}, {"x": 10000, "y": 0.21216100140009075}, {"x": 10000, "y": 0.22153200552565977}, {"x": 10000, "y": 0.22080199414631352}, {"x": 10000, "y": 0.21121200552443042}, {"x": 10000, "y": 0.21071099763503298}, {"x": 1000000, "y": 21.63598699553404}, {"x": 1000000, "y": 21.720077995269094}, {"x": 1000000, "y": 23.312708995945286}, {"x": 1000000, "y": 22.351949999574572}, {"x": 1000000, "y": 22.71430100518046}, {"x": 1000000, "y": 22.33661899663275}, {"x": 1000000, "y": 22.215308003069367}, {"x": 1000000, "y": 22.95919300377136}, {"x": 1000000, "y": 23.26179699593922}, {"x": 1000000, "y": 22.865441998874303}, {"x": 100, "y": 0.0030199953471310437}, {"x": 100, "y": 0.0039000005926936865}, {"x": 100, "y": 0.003969995304942131}, {"x": 100, "y": 0.0025999979698099196}, {"x": 100, "y": 0.0030899973353371024}, {"x": 100, "y": 0.003450004442129284}, {"x": 100, "y": 0.0026699999580159783}, {"x": 100, "y": 0.0040900049498304725}, {"x": 100, "y": 0.004389999958220869}, {"x": 100, "y": 0.004559995431918651}, {"x": 1000, "y": 0.024929999199230224}, {"x": 1000, "y": 0.023760003386996686}, {"x": 1000, "y": 0.023180000425782055}, {"x": 1000, "y": 0.02296999446116388}, {"x": 1000, "y": 0.023181004507932812}, {"x": 1000, "y": 0.022479995095636696}, {"x": 1000, "y": 0.022040003386791795}, {"x": 1000, "y": 0.020950006728526205}, {"x": 1000, "y": 0.023759996111039072}, {"x": 1000, "y": 0.02297999890288338}, {"x": 10, "y": 0.0018499995348975062}, {"x": 10, "y": 0.0015699988580308855}, {"x": 10, "y": 0.001009997504297644}, {"x": 10, "y": 0.001619999238755554}, {"x": 10, "y": 0.0024500041035935283}, {"x": 10, "y": 0.0011500014807097614}, {"x": 10, "y": 0.001820000761654228}, {"x": 10, "y": 0.0018400023691356182}, {"x": 10, "y": 0.002010005118791014}, {"x": 10, "y": 0.0009900031727738678}, {"x": 50000000, "y": 1047.240491003322}, {"x": 50000000, "y": 1030.4423889974714}, {"x": 50000000, "y": 1036.210881000443}, {"x": 50000000, "y": 1053.119014002732}, {"x": 50000000, "y": 1041.6606279977714}, {"x": 50000000, "y": 1064.8853630045778}, {"x": 50000000, "y": 1060.9171360047185}, {"x": 50000000, "y": 1031.9704590001493}, {"x": 50000000, "y": 1032.9120169990347}, {"x": 50000000, "y": 1051.8259219970787}, {"x": 1, "y": 0.0018900027498602867}, {"x": 1, "y": 0.0005999972927384079}, {"x": 1, "y": 0.001429994881618768}, {"x": 1, "y": 0.001729997165966779}, {"x": 1, "y": 0.0012999953469261527}, {"x": 1, "y": 0.001010004780255258}, {"x": 1, "y": 0.002019995008595288}, {"x": 1, "y": 0.0020099978428333998}, {"x": 1, "y": 0.0003800014383159578}, {"x": 1, "y": 0.0012500022421590984}], "name": "direct_iter.runs", "showInLegend": false, "type": "scatter"}, {"color": "#1f77b4", "dataPoints": [{"x": 1, "y": 0.0003800014383159578}, {"x": 10, "y": 0.0009900031727738678}, {"x": 100, "y": 0.0025999979698099196}, {"x": 1000, "y": 0.020950006728526205}, {"x": 10000, "y": 0.20874100300716236}, {"x": 100000, "y": 2.0864770049229264}, {"x": 1000000, "y": 21.63598699553404}, {"x": 10000000, "y": 203.94603299791925}, {"x": 50000000, "y": 1030.4423889974714}], "name": "direct_iter", "showInLegend": true, "type": "spline"}, {"color": "#ff7f0e", "dataPoints": [{"x": 1000, "y": 0.030800998501945287}, {"x": 1000, "y": 0.031089999538380653}, {"x": 1000, "y": 0.03324999852338806}, {"x": 1000, "y": 0.028000999009236693}, {"x": 1000, "y": 0.030309995054267347}, {"x": 1000, "y": 0.03324999852338806}, {"x": 1000, "y": 0.029779999749734998}, {"x": 1000, "y": 0.028690003091469407}, {"x": 1000, "y": 0.030390001484192908}, {"x": 1000, "y": 0.030800001695752144}, {"x": 10, "y": 0.003239998477511108}, {"x": 10, "y": 0.003360000846441835}, {"x": 10, "y": 0.00181000359589234}, {"x": 10, "y": 0.0037100035115145147}, {"x": 10, "y": 0.001009997504297644}, {"x": 10, "y": 0.004139998054597527}, {"x": 10, "y": 0.002430002496112138}, {"x": 10, "y": 0.0014899997040629387}, {"x": 10, "y": 0.0030900046112947166}, {"x": 10, "y": 0.003559995093382895}, {"x": 10000000, "y": 813.3374870012631}, {"x": 10000000, "y": 811.4476519986056}, {"x": 10000000, "y": 832.4731520042405}, {"x": 10000000, "y": 830.890620003629}, {"x": 10000000, "y": 828.3524939979543}, {"x": 10000000, "y": 823.2596400048351}, {"x": 10000000, "y": 828.1302659961511}, {"x": 10000000, "y": 846.4829479999025}, {"x": 10000000, "y": 812.5460640003439}, {"x": 10000000, "y": 853.9163789973827}, {"x": 100000, "y": 7.6230129998293705}, {"x": 100000, "y": 6.25844099704409}, {"x": 100000, "y": 6.207081001775805}, {"x": 100000, "y": 6.177013005071785}, {"x": 100000, "y": 6.588207004824653}, {"x": 100000, "y": 6.493666005553678}, {"x": 100000, "y": 6.497324997326359}, {"x": 100000, "y": 6.485325000539888}, {"x": 100000, "y": 6.760787000530399}, {"x": 100000, "y": 6.472303997725248}, {"x": 1000000, "y": 85.36366900079884}, {"x": 1000000, "y": 85.81297400087351}, {"x": 1000000, "y": 84.27666899660835}, {"x": 1000000, "y": 82.55666700279107}, {"x": 1000000, "y": 82.5841149999178}, {"x": 1000000, "y": 80.52369500364875}, {"x": 1000000, "y": 80.98205799615243}, {"x": 1000000, "y": 69.6558389972779}, {"x": 1000000, "y": 72.64186300017172}, {"x": 1000000, "y": 69.249703999958}, {"x": 10000, "y": 0.6000049979775213}, {"x": 10000, "y": 0.6307250005193055}, {"x": 10000, "y": 0.6545249998453073}, {"x": 10000, "y": 0.5918250026297756}, {"x": 10000, "y": 0.6392650029738434}, {"x": 10000, "y": 0.6369250040734187}, {"x": 10000, "y": 0.6642660009674728}, {"x": 10000, "y": 0.6638960039708763}, {"x": 10000, "y": 0.595894998696167}, {"x": 10000, "y": 0.6250449951039627}, {"x": 1, "y": 0.0020500010577961802}, {"x": 1, "y": 0.0030800001695752144}, {"x": 1, "y": 0.0014400065992958844}, {"x": 1, "y": 0.003050001396331936}, {"x": 1, "y": 0.0010299991117790341}, {"x": 1, "y": 0.0018700011423788965}, {"x": 1, "y": 0.0019999934011138976}, {"x": 1, "y": 0.0034199983929283917}, {"x": 1, "y": 0.002649998350534588}, {"x": 1, "y": 0.0016900012269616127}, {"x": 100, "y": 0.006649999704677612}, {"x": 100, "y": 0.00467000063508749}, {"x": 100, "y": 0.006410002242773771}, {"x": 100, "y": 0.004360001184977591}, {"x": 100, "y": 0.006820002454333007}, {"x": 100, "y": 0.004749999789055437}, {"x": 100, "y": 0.003850000211969018}, {"x": 100, "y": 0.005549998604692519}, {"x": 100, "y": 0.006800000846851617}, {"x": 100, "y": 0.006709997251164168}, {"x": 50000000, "y": 3998.448967002332}, {"x": 50000000, "y": 3970.369460999791}, {"x": 50000000, "y": 3986.4164079990587}, {"x": 50000000, "y": 3997.0140700024785}, {"x": 50000000, "y": 3975.4555670006084}, {"x": 50000000, "y": 3971.8849130003946}, {"x": 50000000, "y": 3976.4493940019747}, {"x": 50000000, "y": 4001.2438199992175}, {"x": 50000000, "y": 3980.219864999526}, {"x": 50000000, "y": 4023.268930002814}], "name": "list_iter.runs", "showInLegend": false, "type": "scatter"}, {"color": "#ff7f0e", "dataPoints": [{"x": 1, "y": 0.0010299991117790341}, {"x": 10, "y": 0.001009997504297644}, {"x": 100, "y": 0.003850000211969018}, {"x": 1000, "y": 0.028000999009236693}, {"x": 10000, "y": 0.5918250026297756}, {"x": 100000, "y": 6.177013005071785}, {"x": 1000000, "y": 69.249703999958}, {"x": 10000000, "y": 811.4476519986056}, {"x": 50000000, "y": 3970.369460999791}], "name": "list_iter", "showInLegend": true, "type": "spline"}, {"color": "#2ca02c", "dataPoints": [{"x": 10000000, "y": 1074.7928290002164}, {"x": 10000000, "y": 1064.8594340018462}, {"x": 10000000, "y": 1076.2784550024662}, {"x": 10000000, "y": 1069.6558810013812}, {"x": 10000000, "y": 1051.9467600024655}, {"x": 10000000, "y": 1078.1937909996486}, {"x": 10000000, "y": 1038.8379590003751}, {"x": 10000000, "y": 1098.9590600001975}, {"x": 10000000, "y": 1061.458259995561}, {"x": 10000000, "y": 1092.8693120004027}, {"x": 100, "y": 0.008299997716676444}, {"x": 100, "y": 0.008529998012818396}, {"x": 100, "y": 0.008110997441690415}, {"x": 100, "y": 0.007100003131199628}, {"x": 100, "y": 0.008130002242978662}, {"x": 100, "y": 0.007169997843448073}, {"x": 100, "y": 0.0057299985201098025}, {"x": 100, "y": 0.009510004019830376}, {"x": 100, "y": 0.008029994205571711}, {"x": 100, "y": 0.007959999493323267}, {"x": 1000, "y": 0.05750099808210507}, {"x": 1000, "y": 0.05632000102195889}, {"x": 1000, "y": 0.05992100341245532}, {"x": 1000, "y": 0.056231001508422196}, {"x": 1000, "y": 0.055641001381445676}, {"x": 1000, "y": 0.05770999996457249}, {"x": 1000, "y": 0.059209996834397316}, {"x": 1000, "y": 0.06725999992340803}, {"x": 1000, "y": 0.05653999687638134}, {"x": 1000, "y": 0.053030998969916254}, {"x": 10, "y": 0.002950000634882599}, {"x": 10, "y": 0.0029899965738877654}, {"x": 10, "y": 0.005289999535307288}, {"x": 10, "y": 0.004070003342349082}, {"x": 10, "y": 0.0022899985197000206}, {"x": 10, "y": 0.0013899989426136017}, {"x": 10, "y": 0.0034099939512088895}, {"x": 10, "y": 0.004050001734867692}, {"x": 10, "y": 0.004139998054597527}, {"x": 10, "y": 0.004609995812643319}, {"x": 50000000, "y": 5278.322889003903}, {"x": 50000000, "y": 5282.54309699696}, {"x": 50000000, "y": 5528.703563999443}, {"x": 50000000, "y": 5334.63996899809}, {"x": 50000000, "y": 5323.0347680000705}, {"x": 50000000, "y": 5201.210833001824}, {"x": 50000000, "y": 5235.999097996682}, {"x": 50000000, "y": 5255.082767005661}, {"x": 50000000, "y": 5227.102511002158}, {"x": 50000000, "y": 5268.312794993108}, {"x": 1, "y": 0.0013800017768517137}, {"x": 1, "y": 0.0010599978850223124}, {"x": 1, "y": 0.0033199976314790547}, {"x": 1, "y": 0.002439999661874026}, {"x": 1, "y": 0.0017799975466914475}, {"x": 1, "y": 0.002820001100189984}, {"x": 1, "y": 0.003139997716061771}, {"x": 1, "y": 0.003039996954612434}, {"x": 1, "y": 0.003029999788850546}, {"x": 1, "y": 0.0023000029614195228}, {"x": 10000, "y": 0.9105080025619827}, {"x": 10000, "y": 0.9031279987539165}, {"x": 10000, "y": 0.9009280038299039}, {"x": 10000, "y": 0.9150280020548962}, {"x": 10000, "y": 0.9417679975740612}, {"x": 10000, "y": 0.9075580019271001}, {"x": 10000, "y": 0.9239479986717924}, {"x": 10000, "y": 0.9664679964771494}, {"x": 10000, "y": 0.9572179988026619}, {"x": 10000, "y": 0.9590380068402737}, {"x": 1000000, "y": 108.25273799855495}, {"x": 1000000, "y": 110.20766400179127}, {"x": 1000000, "y": 111.65323900058866}, {"x": 1000000, "y": 108.47293300321326}, {"x": 1000000, "y": 107.69826699834084}, {"x": 1000000, "y": 106.99294100049883}, {"x": 1000000, "y": 106.53949500556337}, {"x": 1000000, "y": 96.77491800539428}, {"x": 1000000, "y": 99.25748800014844}, {"x": 1000000, "y": 95.83038800337818}, {"x": 100000, "y": 8.961703999375459}, {"x": 100000, "y": 9.132065002631862}, {"x": 100000, "y": 9.509547999186907}, {"x": 100000, "y": 9.117394001805224}, {"x": 100000, "y": 9.286568994866684}, {"x": 100000, "y": 9.12208800582448}, {"x": 100000, "y": 9.71172299614409}, {"x": 100000, "y": 9.631601998989936}, {"x": 100000, "y": 9.457679996558}, {"x": 100000, "y": 9.690012004284654}], "name": "list_index.runs", "showInLegend": false, "type": "scatter"}, {"color": "#2ca02c", "dataPoints": [{"x": 1, "y": 0.0010599978850223124}, {"x": 10, "y": 0.0013899989426136017}, {"x": 100, "y": 0.0057299985201098025}, {"x": 1000, "y": 0.053030998969916254}, {"x": 10000, "y": 0.9009280038299039}, {"x": 100000, "y": 8.961703999375459}, {"x": 1000000, "y": 95.83038800337818}, {"x": 10000000, "y": 1038.8379590003751}, {"x": 50000000, "y": 5201.210833001824}], "name": "list_index", "showInLegend": true, "type": "spline"}, {"color": "#d62728", "dataPoints": [{"x": 10000000, "y": 705.5797920038458}, {"x": 10000000, "y": 714.7928600024898}, {"x": 10000000, "y": 720.5747339976369}, {"x": 10000000, "y": 770.0970410005539}, {"x": 10000000, "y": 702.871823006717}, {"x": 10000000, "y": 700.5362829950172}, {"x": 10000000, "y": 712.5224839983275}, {"x": 10000000, "y": 698.3329170034267}, {"x": 10000000, "y": 749.2186679955921}, {"x": 10000000, "y": 756.3305959993158}, {"x": 1, "y": 0.0023099928512237966}, {"x": 1, "y": 0.0025800036382861435}, {"x": 1, "y": 0.002210006641689688}, {"x": 1, "y": 0.002749999111983925}, {"x": 1, "y": 0.0012700038496404886}, {"x": 1, "y": 0.002339998900424689}, {"x": 1, "y": 0.0011899974197149277}, {"x": 1, "y": 0.003029999788850546}, {"x": 1, "y": 0.0021099986042827368}, {"x": 1, "y": 0.0024900000425986946}, {"x": 100000, "y": 7.611551998707}, {"x": 100000, "y": 7.467821997124702}, {"x": 100000, "y": 7.639673000085168}, {"x": 100000, "y": 7.752457000606228}, {"x": 100000, "y": 7.331273001909722}, {"x": 100000, "y": 7.392172999971081}, {"x": 100000, "y": 7.548244000645354}, {"x": 100000, "y": 7.49408300180221}, {"x": 100000, "y": 7.4681029946077615}, {"x": 100000, "y": 7.530183000199031}, {"x": 50000000, "y": 3618.322142996476}, {"x": 50000000, "y": 3549.9553230038146}, {"x": 50000000, "y": 3642.7558439972927}, {"x": 50000000, "y": 3620.4300899989903}, {"x": 50000000, "y": 3548.2624799988116}, {"x": 50000000, "y": 3597.6899579982273}, {"x": 50000000, "y": 3635.478267002327}, {"x": 50000000, "y": 3572.094046001439}, {"x": 50000000, "y": 3603.3842049946543}, {"x": 50000000, "y": 3674.31783000211}, {"x": 10000, "y": 0.7430460027535446}, {"x": 10000, "y": 0.7551559974672273}, {"x": 10000, "y": 0.7644060024176724}, {"x": 10000, "y": 0.7732969970675185}, {"x": 10000, "y": 0.7419260000460781}, {"x": 10000, "y": 0.7779270017636009}, {"x": 10000, "y": 0.7117760032997467}, {"x": 10000, "y": 0.7496960024582222}, {"x": 10000, "y": 0.7982969982549548}, {"x": 10000, "y": 0.7237359968712553}, {"x": 10, "y": 0.0026699999580159783}, {"x": 10, "y": 0.003050001396331936}, {"x": 10, "y": 0.0036799974623136222}, {"x": 10, "y": 0.002849999873433262}, {"x": 10, "y": 0.00283999543171376}, {"x": 10, "y": 0.003670000296551734}, {"x": 10, "y": 0.001610002072993666}, {"x": 10, "y": 0.0029700022423639894}, {"x": 10, "y": 0.0018499995348975062}, {"x": 10, "y": 0.003049994120374322}, {"x": 1000, "y": 0.07298099808394909}, {"x": 1000, "y": 0.0743609998608008}, {"x": 1000, "y": 0.0786909949965775}, {"x": 1000, "y": 0.07705100142629817}, {"x": 1000, "y": 0.07555099728051573}, {"x": 1000, "y": 0.07609000022057444}, {"x": 1000, "y": 0.0722110053175129}, {"x": 1000, "y": 0.0748410020605661}, {"x": 1000, "y": 0.0729609964764677}, {"x": 1000, "y": 0.07444099901476875}, {"x": 1000000, "y": 75.79597499716328}, {"x": 1000000, "y": 72.82446099998197}, {"x": 1000000, "y": 76.16319799853954}, {"x": 1000000, "y": 75.66965300065931}, {"x": 1000000, "y": 74.09675999952015}, {"x": 1000000, "y": 76.18227500643115}, {"x": 1000000, "y": 74.7156220022589}, {"x": 1000000, "y": 75.73925900214817}, {"x": 1000000, "y": 74.60415000241483}, {"x": 1000000, "y": 77.15794099931372}, {"x": 100, "y": 0.00837999687064439}, {"x": 100, "y": 0.008650000381749123}, {"x": 100, "y": 0.009960000170394778}, {"x": 100, "y": 0.007420996553264558}, {"x": 100, "y": 0.008360002539120615}, {"x": 100, "y": 0.007969996659085155}, {"x": 100, "y": 0.007260001439135522}, {"x": 100, "y": 0.008429997251369059}, {"x": 100, "y": 0.006590002158191055}, {"x": 100, "y": 0.007999995432328433}], "name": "items_index(*).runs", "showInLegend": false, "type": "scatter"}, {"color": "#d62728", "dataPoints": [{"x": 1, "y": 0.0011899974197149277}, {"x": 10, "y": 0.001610002072993666}, {"x": 100, "y": 0.006590002158191055}, {"x": 1000, "y": 0.0722110053175129}, {"x": 10000, "y": 0.7117760032997467}, {"x": 100000, "y": 7.331273001909722}, {"x": 1000000, "y": 72.82446099998197}, {"x": 10000000, "y": 698.3329170034267}, {"x": 50000000, "y": 3548.2624799988116}], "name": "items_index(*)", "showInLegend": true, "type": "spline"}, {"color": "#9467bd", "dataPoints": [{"x": 10000000, "y": 207.1191249997355}, {"x": 10000000, "y": 210.4827830044087}, {"x": 10000000, "y": 212.6732600008836}, {"x": 10000000, "y": 209.8497459955979}, {"x": 10000000, "y": 210.25177800038364}, {"x": 10000000, "y": 210.43135799845913}, {"x": 10000000, "y": 211.44068200374022}, {"x": 10000000, "y": 210.81948499340797}, {"x": 10000000, "y": 219.3927909975173}, {"x": 10000000, "y": 217.10818199790083}, {"x": 100, "y": 0.004360001184977591}, {"x": 100, "y": 0.0026500056264922023}, {"x": 100, "y": 0.0039900041883811355}, {"x": 100, "y": 0.00445000478066504}, {"x": 100, "y": 0.003260000084992498}, {"x": 100, "y": 0.004389999958220869}, {"x": 100, "y": 0.005160000000614673}, {"x": 100, "y": 0.003360000846441835}, {"x": 100, "y": 0.004040004569105804}, {"x": 100, "y": 0.004380999598652124}, {"x": 10000, "y": 0.21859100525034592}, {"x": 10000, "y": 0.2303420042153448}, {"x": 10000, "y": 0.21690200082957745}, {"x": 10000, "y": 0.2175619956688024}, {"x": 10000, "y": 0.20975200459361076}, {"x": 10000, "y": 0.21685200044885278}, {"x": 10000, "y": 0.21554099657805637}, {"x": 10000, "y": 0.20786099776159972}, {"x": 10000, "y": 0.22160200023790821}, {"x": 10000, "y": 0.21570199896814302}, {"x": 10, "y": 0.001710999640636146}, {"x": 10, "y": 0.002010005118791014}, {"x": 10, "y": 0.0024500041035935283}, {"x": 10, "y": 0.00285999703919515}, {"x": 10, "y": 0.002410000888630748}, {"x": 10, "y": 0.0012700038496404886}, {"x": 10, "y": 0.0014700053725391626}, {"x": 10, "y": 0.0041099992813542485}, {"x": 10, "y": 0.0019500002963468432}, {"x": 10, "y": 0.002119995770044625}, {"x": 1, "y": 0.0012999953469261527}, {"x": 1, "y": 0.0007700000423938036}, {"x": 1, "y": 0.0011200027074664831}, {"x": 1, "y": 0.00039999576983973384}, {"x": 1, "y": 0.002149994543287903}, {"x": 1, "y": 0.0013600001693703234}, {"x": 1, "y": 0.0014500037650577724}, {"x": 1, "y": 0.0008700008038431406}, {"x": 1, "y": 0.0019899962353520095}, {"x": 1, "y": 0.0005100009730085731}, {"x": 1000000, "y": 21.08269299787935}, {"x": 1000000, "y": 22.029040999768768}, {"x": 1000000, "y": 22.34237400261918}, {"x": 1000000, "y": 22.6638969979831}, {"x": 1000000, "y": 21.774999004264828}, {"x": 1000000, "y": 21.384471998317167}, {"x": 1000000, "y": 22.1971890059649}, {"x": 1000000, "y": 22.892804998264182}, {"x": 1000000, "y": 23.18390599975828}, {"x": 1000000, "y": 22.178377999807708}, {"x": 50000000, "y": 1028.2735750006395}, {"x": 50000000, "y": 1038.6509950039908}, {"x": 50000000, "y": 1041.2692749960115}, {"x": 50000000, "y": 1066.2033400003565}, {"x": 50000000, "y": 1038.4645689991885}, {"x": 50000000, "y": 1046.3146780020907}, {"x": 50000000, "y": 1034.2062899944722}, {"x": 50000000, "y": 1050.860516996181}, {"x": 50000000, "y": 1053.433185996255}, {"x": 50000000, "y": 1055.2024860007805}, {"x": 100000, "y": 2.296249003848061}, {"x": 100000, "y": 2.201388997491449}, {"x": 100000, "y": 2.298309998877812}, {"x": 100000, "y": 2.3994509974727407}, {"x": 100000, "y": 2.2940600028960034}, {"x": 100000, "y": 2.295549005793873}, {"x": 100000, "y": 2.3803899966878816}, {"x": 100000, "y": 2.2880690012243576}, {"x": 100000, "y": 2.3830999998608604}, {"x": 100000, "y": 2.4934510001912713}, {"x": 1000, "y": 0.024130000383593142}, {"x": 1000, "y": 0.023139997210819274}, {"x": 1000, "y": 0.022410997189581394}, {"x": 1000, "y": 0.024369997845496982}, {"x": 1000, "y": 0.023410000721924007}, {"x": 1000, "y": 0.021290004951879382}, {"x": 1000, "y": 0.024050001229625195}, {"x": 1000, "y": 0.021911000658292323}, {"x": 1000, "y": 0.02149999636458233}, {"x": 1000, "y": 0.02194000262534246}], "name": "iter_items.runs", "showInLegend": false, "type": "scatter"}, {"color": "#9467bd", "dataPoints": [{"x": 1, "y": 0.00039999576983973384}, {"x": 10, "y": 0.0012700038496404886}, {"x": 100, "y": 0.0026500056264922023}, {"x": 1000, "y": 0.021290004951879382}, {"x": 10000, "y": 0.20786099776159972}, {"x": 100000, "y": 2.201388997491449}, {"x": 1000000, "y": 21.08269299787935}, {"x": 10000000, "y": 207.1191249997355}, {"x": 50000000, "y": 1028.2735750006395}], "name": "iter_items", "showInLegend": true, "type": "spline"}]}, {"cls": "IterKeys", "series": [{"color": "#1f77b4", "dataPoints": [{"x": 1000000, "y": 13.207426993176341}, {"x": 1000000, "y": 15.49614700343227}, {"x": 1000000, "y": 14.068932003283408}, {"x": 1000000, "y": 14.073231002839748}, {"x": 1000000, "y": 14.314111998828594}, {"x": 1000000, "y": 15.80810400628252}, {"x": 1000000, "y": 15.864294997300021}, {"x": 1000000, "y": 15.548700997896958}, {"x": 1000000, "y": 14.851555999484845}, {"x": 1000000, "y": 14.443370993831195}, {"x": 1000, "y": 0.011310003174003214}, {"x": 1000, "y": 0.01219999830937013}, {"x": 1000, "y": 0.010839998139999807}, {"x": 1000, "y": 0.012659998901654035}, {"x": 1000, "y": 0.012580996553879231}, {"x": 1000, "y": 0.012389995390549302}, {"x": 1000, "y": 0.012410004273988307}, {"x": 1000, "y": 0.011169999197591096}, {"x": 1000, "y": 0.011320000339765102}, {"x": 1000, "y": 0.01283000165130943}, {"x": 10000, "y": 0.10499099880689755}, {"x": 10000, "y": 0.10710099741118029}, {"x": 10000, "y": 0.10798100265674293}, {"x": 10000, "y": 0.1083410024875775}, {"x": 10000, "y": 0.1098810025723651}, {"x": 10000, "y": 0.10681099956855178}, {"x": 10000, "y": 0.10785100312205032}, {"x": 10000, "y": 0.10913099686149508}, {"x": 10000, "y": 0.10868100071093068}, {"x": 10000, "y": 0.1334209955530241}, {"x": 1, "y": 0.002330001734662801}, {"x": 1, "y": 0.0012899981811642647}, {"x": 1, "y": 0.0026699999580159783}, {"x": 1, "y": 0.0018599967006593943}, {"x": 1, "y": 0.0015600016922689974}, {"x": 1, "y": 0.0017400016076862812}, {"x": 1, "y": 0.0020000006770715117}, {"x": 1, "y": 0.0017700003809295595}, {"x": 1, "y": 0.001410000550094992}, {"x": 1, "y": 0.0018700011423788965}, {"x": 100, "y": 0.0022899985197000206}, {"x": 100, "y": 0.0018799983081407845}, {"x": 100, "y": 0.0023600005079060793}, {"x": 100, "y": 0.0029600050766021013}, {"x": 100, "y": 0.00202999945031479}, {"x": 100, "y": 0.0017700003809295595}, {"x": 100, "y": 0.002019995008595288}, {"x": 100, "y": 0.003939996531698853}, {"x": 100, "y": 0.001929998688865453}, {"x": 100, "y": 0.0025600020308047533}, {"x": 100000, "y": 1.1478789965622127}, {"x": 100000, "y": 1.2618910041055642}, {"x": 100000, "y": 1.215889999002684}, {"x": 100000, "y": 1.2678810016950592}, {"x": 100000, "y": 1.23609000002034}, {"x": 100000, "y": 1.224309999088291}, {"x": 100000, "y": 1.3208710006438196}, {"x": 100000, "y": 1.3642409976455383}, {"x": 100000, "y": 1.2634910017368384}, {"x": 100000, "y": 1.360242000373546}, {"x": 50000000, "y": 743.4634349992848}, {"x": 50000000, "y": 758.5827389993938}, {"x": 50000000, "y": 818.0586309972568}, {"x": 50000000, "y": 762.6420779997716}, {"x": 50000000, "y": 829.6014169973205}, {"x": 50000000, "y": 733.9581190026365}, {"x": 50000000, "y": 780.5251739991945}, {"x": 50000000, "y": 791.7561889989884}, {"x": 50000000, "y": 787.3018980026245}, {"x": 50000000, "y": 790.696352996747}, {"x": 10000000, "y": 156.07310299674282}, {"x": 10000000, "y": 165.38202000083402}, {"x": 10000000, "y": 168.37542899884284}, {"x": 10000000, "y": 164.86023800098337}, {"x": 10000000, "y": 162.69503999501467}, {"x": 10000000, "y": 153.98060400184477}, {"x": 10000000, "y": 166.29554799874313}, {"x": 10000000, "y": 165.36977999930969}, {"x": 10000000, "y": 140.83040800323943}, {"x": 10000000, "y": 166.1919920006767}, {"x": 10, "y": 0.0021599989850074053}, {"x": 10, "y": 0.0018599967006593943}, {"x": 10, "y": 0.0006600021151825786}, {"x": 10, "y": 0.0021700034267269075}, {"x": 10, "y": 0.0019400031305849552}, {"x": 10, "y": 0.0006199989002197981}, {"x": 10, "y": 0.0009499999578110874}, {"x": 10, "y": 0.0011800002539530396}, {"x": 10, "y": 0.0007800044841133058}, {"x": 10, "y": 0.0015800032997503877}], "name": "direct_iter.runs", "showInLegend": false, "type": "scatter"}, {"color": "#1f77b4", "dataPoints": [{"x": 1, "y": 0.0012899981811642647}, {"x": 10, "y": 0.0006199989002197981}, {"x": 100, "y": 0.0017700003809295595}, {"x": 1000, "y": 0.010839998139999807}, {"x": 10000, "y": 0.10499099880689755}, {"x": 100000, "y": 1.1478789965622127}, {"x": 1000000, "y": 13.207426993176341}, {"x": 10000000, "y": 140.83040800323943}, {"x": 50000000, "y": 733.9581190026365}], "name": "direct_iter", "showInLegend": true, "type": "spline"}, {"color": "#ff7f0e", "dataPoints": [{"x": 10, "y": 0.0037299978430382907}, {"x": 10, "y": 0.003220004145987332}, {"x": 10, "y": 0.0023899992811493576}, {"x": 10, "y": 0.0023899992811493576}, {"x": 10, "y": 0.0038700018194504082}, {"x": 10, "y": 0.0024699984351173043}, {"x": 10, "y": 0.0036799974623136222}, {"x": 10, "y": 0.006841000868007541}, {"x": 10, "y": 0.006319998647086322}, {"x": 10, "y": 0.003979999746661633}, {"x": 10000000, "y": 521.5771249932004}, {"x": 10000000, "y": 512.1852509983}, {"x": 10000000, "y": 526.4973080047639}, {"x": 10000000, "y": 520.4703119961778}, {"x": 10000000, "y": 540.9762939962093}, {"x": 10000000, "y": 518.6577639979078}, {"x": 10000000, "y": 513.5790490021463}, {"x": 10000000, "y": 545.3204590012319}, {"x": 10000000, "y": 529.8955100006424}, {"x": 10000000, "y": 539.1765559979831}, {"x": 1000000, "y": 51.77768399880733}, {"x": 1000000, "y": 47.98690199822886}, {"x": 1000000, "y": 50.61739600205328}, {"x": 1000000, "y": 48.66034999577096}, {"x": 1000000, "y": 50.09276200144086}, {"x": 1000000, "y": 50.83483100315789}, {"x": 1000000, "y": 55.99848499696236}, {"x": 1000000, "y": 55.851912999060005}, {"x": 1000000, "y": 54.80520400305977}, {"x": 1000000, "y": 52.74114499479765}, {"x": 1000, "y": 0.04346099740359932}, {"x": 1000, "y": 0.04424099461175501}, {"x": 1000, "y": 0.04164999700151384}, {"x": 1000, "y": 0.03961999755119905}, {"x": 1000, "y": 0.043799998820759356}, {"x": 1000, "y": 0.03979999746661633}, {"x": 1000, "y": 0.04279000131646171}, {"x": 1000, "y": 0.04230999911669642}, {"x": 1000, "y": 0.041350998799316585}, {"x": 1000, "y": 0.04074000025866553}, {"x": 100, "y": 0.0058499936130829155}, {"x": 100, "y": 0.005050002073403448}, {"x": 100, "y": 0.004820001777261496}, {"x": 100, "y": 0.005380003130994737}, {"x": 100, "y": 0.005310001142788678}, {"x": 100, "y": 0.00610999995842576}, {"x": 100, "y": 0.006880000000819564}, {"x": 100, "y": 0.004280002031009644}, {"x": 100, "y": 0.004539993824437261}, {"x": 100, "y": 0.004469999112188816}, {"x": 10000, "y": 0.4398239980218932}, {"x": 10000, "y": 0.4137439973419532}, {"x": 10000, "y": 0.44300400622887537}, {"x": 10000, "y": 0.41596299706725404}, {"x": 10000, "y": 0.41485299880150706}, {"x": 10000, "y": 0.42192399996565655}, {"x": 10000, "y": 0.4217829991830513}, {"x": 10000, "y": 0.6092949988669716}, {"x": 10000, "y": 0.4243639996275306}, {"x": 10000, "y": 0.4254730010870844}, {"x": 100000, "y": 4.368125999462791}, {"x": 100000, "y": 4.449175998161081}, {"x": 100000, "y": 4.590989999996964}, {"x": 100000, "y": 4.535138999926858}, {"x": 100000, "y": 4.838330998609308}, {"x": 100000, "y": 4.758379996928852}, {"x": 100000, "y": 4.788300997461192}, {"x": 100000, "y": 4.843950999202207}, {"x": 100000, "y": 4.51975800388027}, {"x": 100000, "y": 4.496718000154942}, {"x": 50000000, "y": 2660.1349170014146}, {"x": 50000000, "y": 2589.0894740005024}, {"x": 50000000, "y": 2583.637659998203}, {"x": 50000000, "y": 2576.1458779961686}, {"x": 50000000, "y": 2617.274966003606}, {"x": 50000000, "y": 2600.32078599761}, {"x": 50000000, "y": 2633.7482790040667}, {"x": 50000000, "y": 2631.8306920002215}, {"x": 50000000, "y": 2713.279057999898}, {"x": 50000000, "y": 2665.2970079958322}, {"x": 1, "y": 0.002729997504502535}, {"x": 1, "y": 0.0024500041035935283}, {"x": 1, "y": 0.003740002284757793}, {"x": 1, "y": 0.0027799978852272034}, {"x": 1, "y": 0.0021800005924887955}, {"x": 1, "y": 0.0014799952623434365}, {"x": 1, "y": 0.002820001100189984}, {"x": 1, "y": 0.0037899953895248473}, {"x": 1, "y": 0.003460001607891172}, {"x": 1, "y": 0.0033100004657171667}], "name": "list_index.runs", "showInLegend": false, "type": "scatter"}, {"color": "#ff7f0e", "dataPoints": [{"x": 1, "y": 0.0014799952623434365}, {"x": 10, "y": 0.0023899992811493576}, {"x": 100, "y": 0.004280002031009644}, {"x": 1000, "y": 0.03961999755119905}, {"x": 10000, "y": 0.4137439973419532}, {"x": 100000, "y": 4.368125999462791}, {"x": 1000000, "y": 47.98690199822886}, {"x": 10000000, "y": 512.1852509983}, {"x": 50000000, "y": 2576.1458779961686}], "name": "list_index", "showInLegend": true, "type": "spline"}, {"color": "#2ca02c", "dataPoints": [{"x": 100000, "y": 1.1424290059949271}, {"x": 100000, "y": 1.2691709998762235}, {"x": 100000, "y": 1.3214310019975528}, {"x": 100000, "y": 1.294590998440981}, {"x": 100000, "y": 1.4186519983923063}, {"x": 100000, "y": 1.3651519984705374}, {"x": 100000, "y": 1.3829219969920814}, {"x": 100000, "y": 1.3713120060856454}, {"x": 100000, "y": 1.3441620030789636}, {"x": 100000, "y": 1.2989709939574823}, {"x": 1000000, "y": 12.973606993909925}, {"x": 1000000, "y": 13.665531994774938}, {"x": 1000000, "y": 13.663603000168223}, {"x": 1000000, "y": 14.277420996222645}, {"x": 1000000, "y": 14.177009994455148}, {"x": 1000000, "y": 15.689542997279204}, {"x": 1000000, "y": 14.567963000445161}, {"x": 1000000, "y": 14.352821999636944}, {"x": 1000000, "y": 15.205298004730139}, {"x": 1000000, "y": 14.547104001394473}, {"x": 10, "y": 0.0015499972505494952}, {"x": 10, "y": 0.0023000029614195228}, {"x": 10, "y": 0.001929998688865453}, {"x": 10, "y": 0.0035100019886158407}, {"x": 10, "y": 0.0019700019038282335}, {"x": 10, "y": 0.001720000000204891}, {"x": 10, "y": 0.002349996066186577}, {"x": 10, "y": 0.001381005859002471}, {"x": 10, "y": 0.002439999661874026}, {"x": 10, "y": 0.004569999873638153}, {"x": 1000, "y": 0.011659998563118279}, {"x": 1000, "y": 0.012379998224787414}, {"x": 1000, "y": 0.012299999070819467}, {"x": 1000, "y": 0.012420998245943338}, {"x": 1000, "y": 0.012369993783067912}, {"x": 1000, "y": 0.011249998351559043}, {"x": 1000, "y": 0.012320000678300858}, {"x": 1000, "y": 0.012100004823878407}, {"x": 1000, "y": 0.01132999750552699}, {"x": 1000, "y": 0.011479998647700995}, {"x": 1, "y": 0.001610002072993666}, {"x": 1, "y": 0.0014600009308196604}, {"x": 1, "y": 0.0016699996194802225}, {"x": 1, "y": 0.001009997504297644}, {"x": 1, "y": 0.0021400046534836292}, {"x": 1, "y": 0.0004399989848025143}, {"x": 1, "y": 0.0012000018614344299}, {"x": 1, "y": 0.0017499987734481692}, {"x": 1, "y": 0.0011500014807097614}, {"x": 1, "y": 0.0023600005079060793}, {"x": 50000000, "y": 654.2137860014918}, {"x": 50000000, "y": 715.0987659988459}, {"x": 50000000, "y": 640.086319996044}, {"x": 50000000, "y": 654.2904560046736}, {"x": 50000000, "y": 661.6763490019366}, {"x": 50000000, "y": 669.7942190003232}, {"x": 50000000, "y": 649.6583119951538}, {"x": 50000000, "y": 664.6391859976575}, {"x": 50000000, "y": 663.2398970032227}, {"x": 50000000, "y": 677.8938269999344}, {"x": 100, "y": 0.0023500033421441913}, {"x": 100, "y": 0.0024700057110749185}, {"x": 100, "y": 0.002339998900424689}, {"x": 100, "y": 0.004820001777261496}, {"x": 100, "y": 0.0021899977582506835}, {"x": 100, "y": 0.0036900019040331244}, {"x": 100, "y": 0.0025999979698099196}, {"x": 100, "y": 0.003040004230570048}, {"x": 100, "y": 0.0025800036382861435}, {"x": 100, "y": 0.00181000359589234}, {"x": 10000000, "y": 129.5790259973728}, {"x": 10000000, "y": 141.57556999998633}, {"x": 10000000, "y": 131.61023800057592}, {"x": 10000000, "y": 134.0697830019053}, {"x": 10000000, "y": 145.63240499410313}, {"x": 10000000, "y": 131.60861600044882}, {"x": 10000000, "y": 136.09257100324612}, {"x": 10000000, "y": 145.21076500386698}, {"x": 10000000, "y": 135.4348319946439}, {"x": 10000000, "y": 152.81380899978103}, {"x": 10000, "y": 0.10926100367214531}, {"x": 10000, "y": 0.10981100058415905}, {"x": 10000, "y": 0.10748099884949625}, {"x": 10000, "y": 0.10778100113384426}, {"x": 10000, "y": 0.11400100629543886}, {"x": 10000, "y": 0.1086510019376874}, {"x": 10000, "y": 0.10727100016083568}, {"x": 10000, "y": 0.10840100003406405}, {"x": 10000, "y": 0.11009100126102567}, {"x": 10000, "y": 0.10966099944198504}], "name": "iter_keys.runs", "showInLegend": false, "type": "scatter"}, {"color": "#2ca02c", "dataPoints": [{"x": 1, "y": 0.0004399989848025143}, {"x": 10, "y": 0.001381005859002471}, {"x": 100, "y": 0.00181000359589234}, {"x": 1000, "y": 0.011249998351559043}, {"x": 10000, "y": 0.10727100016083568}, {"x": 100000, "y": 1.1424290059949271}, {"x": 1000000, "y": 12.973606993909925}, {"x": 10000000, "y": 129.5790259973728}, {"x": 50000000, "y": 640.086319996044}], "name": "iter_keys", "showInLegend": true, "type": "spline"}, {"color": "#d62728", "dataPoints": [{"x": 100000, "y": 1.460562001739163}, {"x": 100000, "y": 1.4409120049094781}, {"x": 100000, "y": 1.5382329947897233}, {"x": 100000, "y": 1.7767949975677766}, {"x": 100000, "y": 1.8408249961794354}, {"x": 100000, "y": 1.7081539990613237}, {"x": 100000, "y": 1.6655639992677607}, {"x": 100000, "y": 1.7434449982829392}, {"x": 100000, "y": 1.7288250019191764}, {"x": 100000, "y": 1.726815004076343}, {"x": 1000, "y": 0.013719996786676347}, {"x": 1000, "y": 0.01614099892321974}, {"x": 1000, "y": 0.014730001566931605}, {"x": 1000, "y": 0.01377000444335863}, {"x": 1000, "y": 0.017090998881030828}, {"x": 1000, "y": 0.01392999547533691}, {"x": 1000, "y": 0.014769997505936772}, {"x": 1000, "y": 0.014400000509340316}, {"x": 1000, "y": 0.013970005966257304}, {"x": 1000, "y": 0.014181001461111009}, {"x": 1, "y": 0.002720000338740647}, {"x": 1, "y": 0.004540001100394875}, {"x": 1, "y": 0.0006400005077011883}, {"x": 1, "y": 0.0015400000847876072}, {"x": 1, "y": 0.0030800001695752144}, {"x": 1, "y": 0.0014300021575763822}, {"x": 1, "y": 0.001119995431508869}, {"x": 1, "y": 0.0017499987734481692}, {"x": 1, "y": 0.003239998477511108}, {"x": 1, "y": 0.0033800024539232254}, {"x": 1000000, "y": 23.129920002247673}, {"x": 1000000, "y": 24.215830002503935}, {"x": 1000000, "y": 23.140982004406396}, {"x": 1000000, "y": 26.59444099845132}, {"x": 1000000, "y": 24.723225003981497}, {"x": 1000000, "y": 25.38792899576947}, {"x": 1000000, "y": 26.10608499526279}, {"x": 1000000, "y": 26.362365002569277}, {"x": 1000000, "y": 27.16952999617206}, {"x": 1000000, "y": 25.863538001431152}, {"x": 10000, "y": 0.13232100172899663}, {"x": 10000, "y": 0.13464099902193993}, {"x": 10000, "y": 0.13341100566321984}, {"x": 10000, "y": 0.1345919954474084}, {"x": 10000, "y": 0.1360420064884238}, {"x": 10000, "y": 0.13529200077755377}, {"x": 10000, "y": 0.1360809983452782}, {"x": 10000, "y": 0.1376610016450286}, {"x": 10000, "y": 0.13510099961422384}, {"x": 10000, "y": 0.13663100253324956}, {"x": 10, "y": 0.0030899973353371024}, {"x": 10, "y": 0.0030900046112947166}, {"x": 10, "y": 0.004260000423528254}, {"x": 10, "y": 0.00202999945031479}, {"x": 10, "y": 0.0020400038920342922}, {"x": 10, "y": 0.0021799933165311813}, {"x": 10, "y": 0.002810003934428096}, {"x": 10, "y": 0.0011400043149478734}, {"x": 10, "y": 0.0024999972083605826}, {"x": 10, "y": 0.0018099963199347258}, {"x": 10000000, "y": 259.8986739976681}, {"x": 10000000, "y": 282.01732500019716}, {"x": 10000000, "y": 267.15661600610474}, {"x": 10000000, "y": 266.351439000573}, {"x": 10000000, "y": 261.63891699980013}, {"x": 10000000, "y": 270.5599170003552}, {"x": 10000000, "y": 260.94887900399044}, {"x": 10000000, "y": 277.02239000063855}, {"x": 10000000, "y": 269.5689559986931}, {"x": 10000000, "y": 277.4621409989777}, {"x": 50000000, "y": 1382.957563000673}, {"x": 50000000, "y": 1332.5618540038704}, {"x": 50000000, "y": 1345.7882120055729}, {"x": 50000000, "y": 1307.9989530015155}, {"x": 50000000, "y": 1421.8357610006933}, {"x": 50000000, "y": 1349.8318450001534}, {"x": 50000000, "y": 1366.293756000232}, {"x": 50000000, "y": 1428.500203997828}, {"x": 50000000, "y": 1359.449121002399}, {"x": 50000000, "y": 1411.3386640019598}, {"x": 100, "y": 0.003640001523308456}, {"x": 100, "y": 0.0037999998312443495}, {"x": 100, "y": 0.0042199972085654736}, {"x": 100, "y": 0.0034199983929283917}, {"x": 100, "y": 0.005800000508315861}, {"x": 100, "y": 0.003049994120374322}, {"x": 100, "y": 0.0029900038498453796}, {"x": 100, "y": 0.003660003130789846}, {"x": 100, "y": 0.0037200006772764027}, {"x": 100, "y": 0.004579997039400041}], "name": "list_iter.runs", "showInLegend": false, "type": "scatter"}, {"color": "#d62728", "dataPoints": [{"x": 1, "y": 0.0006400005077011883}, {"x": 10, "y": 0.0011400043149478734}, {"x": 100, "y": 0.0029900038498453796}, {"x": 1000, "y": 0.013719996786676347}, {"x": 10000, "y": 0.13232100172899663}, {"x": 100000, "y": 1.4409120049094781}, {"x": 1000000, "y": 23.129920002247673}, {"x": 10000000, "y": 259.8986739976681}, {"x": 50000000, "y": 1307.9989530015155}], "name": "list_iter", "showInLegend": true, "type": "spline"}, {"color": "#9467bd", "dataPoints": [{"x": 10000000, "y": 412.02857199823484}, {"x": 10000000, "y": 410.77734300051816}, {"x": 10000000, "y": 423.02696599654155}, {"x": 10000000, "y": 404.234241002996}, {"x": 10000000, "y": 428.0120219991659}, {"x": 10000000, "y": 424.1141910024453}, {"x": 10000000, "y": 416.22064300463535}, {"x": 10000000, "y": 421.67857899767114}, {"x": 10000000, "y": 408.39968400541693}, {"x": 10000000, "y": 416.45647199766245}, {"x": 10, "y": 0.0022500025806948543}, {"x": 10, "y": 0.004150002496317029}, {"x": 10, "y": 0.002510001650080085}, {"x": 10, "y": 0.0030099981813691556}, {"x": 10, "y": 0.0027099958970211446}, {"x": 10, "y": 0.0020799998310394585}, {"x": 10, "y": 0.0028600043151527643}, {"x": 10, "y": 0.003269997250754386}, {"x": 10, "y": 0.005549998604692519}, {"x": 10, "y": 0.005209993105381727}, {"x": 100, "y": 0.003750006726477295}, {"x": 100, "y": 0.004989997250959277}, {"x": 100, "y": 0.004809997335541993}, {"x": 100, "y": 0.003770001058001071}, {"x": 100, "y": 0.004790003004018217}, {"x": 100, "y": 0.00490999809699133}, {"x": 100, "y": 0.0037909994716756046}, {"x": 100, "y": 0.006590002158191055}, {"x": 100, "y": 0.004790003004018217}, {"x": 100, "y": 0.004379995516501367}, {"x": 100000, "y": 4.2095949975191616}, {"x": 100000, "y": 4.164263998973183}, {"x": 100000, "y": 4.25372500467347}, {"x": 100000, "y": 4.22556500416249}, {"x": 100000, "y": 4.03542400454171}, {"x": 100000, "y": 4.064572996867355}, {"x": 100000, "y": 4.3124970034114085}, {"x": 100000, "y": 4.534519001026638}, {"x": 100000, "y": 4.389617002743762}, {"x": 100000, "y": 4.426407998835202}, {"x": 1, "y": 0.0022700041881762445}, {"x": 1, "y": 0.002510001650080085}, {"x": 1, "y": 0.0022900057956576347}, {"x": 1, "y": 0.0011000010999850929}, {"x": 1, "y": 0.002439999661874026}, {"x": 1, "y": 0.0014600009308196604}, {"x": 1, "y": 0.0017499987734481692}, {"x": 1, "y": 0.003339999238960445}, {"x": 1, "y": 0.0014800025383010507}, {"x": 1, "y": 0.0009600043995305896}, {"x": 1000, "y": 0.04020999767817557}, {"x": 1000, "y": 0.04112000169698149}, {"x": 1000, "y": 0.041550003516022116}, {"x": 1000, "y": 0.03775100049097091}, {"x": 1000, "y": 0.04166000144323334}, {"x": 1000, "y": 0.03812000068137422}, {"x": 1000, "y": 0.039109996578190476}, {"x": 1000, "y": 0.03755000216187909}, {"x": 1000, "y": 0.04090999573236331}, {"x": 1000, "y": 0.03682999522425234}, {"x": 50000000, "y": 2043.0094570037909}, {"x": 50000000, "y": 2069.183031002467}, {"x": 50000000, "y": 1996.1377910003648}, {"x": 50000000, "y": 1991.4858440024545}, {"x": 50000000, "y": 2004.9437919951743}, {"x": 50000000, "y": 1995.2235129967448}, {"x": 50000000, "y": 2007.8157290045056}, {"x": 50000000, "y": 2042.0527640017099}, {"x": 50000000, "y": 2095.7915330000105}, {"x": 50000000, "y": 2113.5894449980697}, {"x": 10000, "y": 0.415233000239823}, {"x": 10000, "y": 0.4000830012955703}, {"x": 10000, "y": 0.42073299846379086}, {"x": 10000, "y": 0.3949329984607175}, {"x": 10000, "y": 0.42223399941576645}, {"x": 10000, "y": 0.4092230010428466}, {"x": 10000, "y": 0.4226040036883205}, {"x": 10000, "y": 0.43338399700587615}, {"x": 10000, "y": 0.4183630007901229}, {"x": 10000, "y": 0.4126540006836876}, {"x": 1000000, "y": 40.31160899467068}, {"x": 1000000, "y": 41.693737999594305}, {"x": 1000000, "y": 42.05170099885436}, {"x": 1000000, "y": 41.78517799300607}, {"x": 1000000, "y": 39.92367199680302}, {"x": 1000000, "y": 43.99968300276669}, {"x": 1000000, "y": 42.20071600138908}, {"x": 1000000, "y": 42.20973599876743}, {"x": 1000000, "y": 43.94311099895276}, {"x": 1000000, "y": 42.95278200152097}], "name": "keys_index(*).runs", "showInLegend": false, "type": "scatter"}, {"color": "#9467bd", "dataPoints": [{"x": 1, "y": 0.0009600043995305896}, {"x": 10, "y": 0.0020799998310394585}, {"x": 100, "y": 0.003750006726477295}, {"x": 1000, "y": 0.03682999522425234}, {"x": 10000, "y": 0.3949329984607175}, {"x": 100000, "y": 4.03542400454171}, {"x": 1000000, "y": 39.92367199680302}, {"x": 10000000, "y": 404.234241002996}, {"x": 50000000, "y": 1991.4858440024545}], "name": "keys_index(*)", "showInLegend": true, "type": "spline"}]}, {"cls": "GetFirstKey", "series": [{"color": "#1f77b4", "dataPoints": [{"x": 1000000, "y": 0.00587000249652192}, {"x": 1000000, "y": 0.005350004357751459}, {"x": 1000000, "y": 0.004740002623293549}, {"x": 1000000, "y": 0.005390000296756625}, {"x": 1000000, "y": 0.0051299939514137805}, {"x": 1000000, "y": 0.004990004526916891}, {"x": 1000000, "y": 0.0039000005926936865}, {"x": 1000000, "y": 0.004459994670469314}, {"x": 1000000, "y": 0.004799992893822491}, {"x": 1000000, "y": 0.004169996827840805}, {"x": 100, "y": 0.0018499995348975062}, {"x": 100, "y": 0.0019899962353520095}, {"x": 100, "y": 0.0019610015442594886}, {"x": 100, "y": 0.0008799979696050286}, {"x": 100, "y": 0.003249995643272996}, {"x": 100, "y": 0.0011899974197149277}, {"x": 100, "y": 0.0014800025383010507}, {"x": 100, "y": 0.0010899966582655907}, {"x": 100, "y": 0.0003399982233531773}, {"x": 100, "y": 0.0008700008038431406}, {"x": 10000000, "y": 0.005490001058205962}, {"x": 10000000, "y": 0.005330002750270069}, {"x": 10000000, "y": 0.0060499951359815896}, {"x": 10000000, "y": 0.006100002792663872}, {"x": 10000000, "y": 0.006560003384947777}, {"x": 10000000, "y": 0.006200003554113209}, {"x": 10000000, "y": 0.005790003342553973}, {"x": 10000000, "y": 0.0055199998314492404}, {"x": 10000000, "y": 0.004800000169780105}, {"x": 10000000, "y": 0.005590001819655299}, {"x": 50000000, "y": 0.005969995982013643}, {"x": 50000000, "y": 0.006059999577701092}, {"x": 50000000, "y": 0.005710004188586026}, {"x": 50000000, "y": 0.005550005880650133}, {"x": 50000000, "y": 0.0052800023695454}, {"x": 50000000, "y": 0.0064309933804906905}, {"x": 50000000, "y": 0.006690002919640392}, {"x": 50000000, "y": 0.006289999873843044}, {"x": 50000000, "y": 0.006379996193572879}, {"x": 50000000, "y": 0.0063400002545677125}, {"x": 1, "y": 0.0014699980965815485}, {"x": 1, "y": 0.0015699988580308855}, {"x": 1, "y": 0.0023899992811493576}, {"x": 1, "y": 0.001109998265746981}, {"x": 1, "y": 0.0019099970813840628}, {"x": 1, "y": 0.00035999983083456755}, {"x": 1, "y": 0.0005500041879713535}, {"x": 1, "y": 0.0009299983503296971}, {"x": 1, "y": 0.0012800010154023767}, {"x": 1, "y": 0.0007400012691505253}, {"x": 1000, "y": 0.001009997504297644}, {"x": 1000, "y": 0.0017499987734481692}, {"x": 1000, "y": 0.0010899966582655907}, {"x": 1000, "y": 0.0015499972505494952}, {"x": 1000, "y": 0.0021000014385208488}, {"x": 1000, "y": 0.0020700026652775705}, {"x": 1000, "y": 0.0017700003809295595}, {"x": 1000, "y": 0.002330001734662801}, {"x": 1000, "y": 0.0009399955160915852}, {"x": 1000, "y": 0.0008400020305998623}, {"x": 10, "y": 0.0017999991541728377}, {"x": 10, "y": 0.0023000029614195228}, {"x": 10, "y": 0.0009899958968162537}, {"x": 10, "y": 0.0005100009730085731}, {"x": 10, "y": 0.00032000389182940125}, {"x": 10, "y": 0.0007099952199496329}, {"x": 10, "y": 0.0010799994925037026}, {"x": 10, "y": 0.0015899931895546615}, {"x": 10, "y": 0.001309999788645655}, {"x": 10, "y": 0.0022899985197000206}, {"x": 100000, "y": 0.0020700026652775705}, {"x": 100000, "y": 0.0031000017770566046}, {"x": 100000, "y": 0.0031800009310245514}, {"x": 100000, "y": 0.002649998350534588}, {"x": 100000, "y": 0.0037399950088001788}, {"x": 100000, "y": 0.003459994331933558}, {"x": 100000, "y": 0.002829998265951872}, {"x": 100000, "y": 0.0029099974199198186}, {"x": 100000, "y": 0.0023900065571069717}, {"x": 100000, "y": 0.0026400011847727}, {"x": 10000, "y": 0.0012599994079209864}, {"x": 10000, "y": 0.0019500002963468432}, {"x": 10000, "y": 0.0005900001269765198}, {"x": 10000, "y": 0.0011000010999850929}, {"x": 10000, "y": 0.0007400012691505253}, {"x": 10000, "y": 0.001429994881618768}, {"x": 10000, "y": 0.0012599994079209864}, {"x": 10000, "y": 0.002419998054392636}, {"x": 10000, "y": 0.0019099970813840628}, {"x": 10000, "y": 0.0004399989848025143}], "name": "proposed(*).runs", "showInLegend": false, "type": "scatter"}, {"color": "#1f77b4", "dataPoints": [{"x": 1, "y": 0.00035999983083456755}, {"x": 10, "y": 0.00032000389182940125}, {"x": 100, "y": 0.0003399982233531773}, {"x": 1000, "y": 0.0008400020305998623}, {"x": 10000, "y": 0.0004399989848025143}, {"x": 100000, "y": 0.0020700026652775705}, {"x": 1000000, "y": 0.0039000005926936865}, {"x": 10000000, "y": 0.004800000169780105}, {"x": 50000000, "y": 0.0052800023695454}], "name": "proposed(*)", "showInLegend": true, "type": "spline"}, {"color": "#ff7f0e", "dataPoints": [{"x": 1, "y": 0.0015400000847876072}, {"x": 1, "y": 0.0020599982235580683}, {"x": 1, "y": 0.0004500034265220165}, {"x": 1, "y": 0.0015700061339884996}, {"x": 1, "y": 0.0028800059226341546}, {"x": 1, "y": 0.002629996743053198}, {"x": 1, "y": 0.0026400011847727}, {"x": 1, "y": 0.0019599974621087313}, {"x": 1, "y": 0.0021800005924887955}, {"x": 1, "y": 0.0010000003385357559}, {"x": 50000000, "y": 758.9990380001836}, {"x": 50000000, "y": 750.3458020000835}, {"x": 50000000, "y": 762.8873940047924}, {"x": 50000000, "y": 805.290463998972}, {"x": 50000000, "y": 796.6517169988947}, {"x": 50000000, "y": 785.2828319955734}, {"x": 50000000, "y": 816.5393590024905}, {"x": 50000000, "y": 768.9046860032249}, {"x": 50000000, "y": 755.1797419946524}, {"x": 50000000, "y": 749.4833070013556}, {"x": 100, "y": 0.0017900019884109497}, {"x": 100, "y": 0.002920001861639321}, {"x": 100, "y": 0.003560002369340509}, {"x": 100, "y": 0.0016400008462369442}, {"x": 100, "y": 0.0015400000847876072}, {"x": 100, "y": 0.0028600043151527643}, {"x": 100, "y": 0.001829997927416116}, {"x": 100, "y": 0.0013000026228837669}, {"x": 100, "y": 0.001710002834443003}, {"x": 100, "y": 0.0027999994927085936}, {"x": 1000000, "y": 12.59281300008297}, {"x": 1000000, "y": 12.659694002650212}, {"x": 1000000, "y": 12.714524993498344}, {"x": 1000000, "y": 14.269218001572881}, {"x": 1000000, "y": 13.542157001211308}, {"x": 1000000, "y": 14.219942000636365}, {"x": 1000000, "y": 14.956487000745256}, {"x": 1000000, "y": 14.24024099833332}, {"x": 1000000, "y": 14.389572002983186}, {"x": 1000000, "y": 15.356299001723528}, {"x": 10000000, "y": 153.3946669951547}, {"x": 10000000, "y": 154.30823899805546}, {"x": 10000000, "y": 164.2471840023063}, {"x": 10000000, "y": 155.22873000008985}, {"x": 10000000, "y": 161.01121800602414}, {"x": 10000000, "y": 154.93102100299438}, {"x": 10000000, "y": 165.49703999771737}, {"x": 10000000, "y": 164.229248999618}, {"x": 10000000, "y": 162.10859000420896}, {"x": 10000000, "y": 155.93375699972967}, {"x": 10, "y": 0.0012200034689158201}, {"x": 10, "y": 0.0019900035113096237}, {"x": 10, "y": 0.0021699961507692933}, {"x": 10, "y": 0.0015400000847876072}, {"x": 10, "y": 0.0026799971237778664}, {"x": 10, "y": 0.0040900049498304725}, {"x": 10, "y": 0.002549997589085251}, {"x": 10, "y": 0.0023699976736679673}, {"x": 10, "y": 0.0022799940779805183}, {"x": 10, "y": 0.001820000761654228}, {"x": 10000, "y": 0.048961002903524786}, {"x": 10000, "y": 0.048469999455846846}, {"x": 10000, "y": 0.048380999942310154}, {"x": 10000, "y": 0.05166099435882643}, {"x": 10000, "y": 0.04578000516630709}, {"x": 10000, "y": 0.04936000186717138}, {"x": 10000, "y": 0.04719099524663761}, {"x": 10000, "y": 0.05106099706608802}, {"x": 10000, "y": 0.04934099706588313}, {"x": 10000, "y": 0.048300993512384593}, {"x": 100000, "y": 0.6012550002196804}, {"x": 100000, "y": 0.639594996755477}, {"x": 100000, "y": 0.7091259976732545}, {"x": 100000, "y": 0.7425160001730546}, {"x": 100000, "y": 0.7027860046946444}, {"x": 100000, "y": 0.7140860034269281}, {"x": 100000, "y": 0.7514269964303821}, {"x": 100000, "y": 0.7711470025242306}, {"x": 100000, "y": 0.7696059983572923}, {"x": 100000, "y": 0.726036996638868}, {"x": 1000, "y": 0.005909998435527086}, {"x": 1000, "y": 0.006539994501508772}, {"x": 1000, "y": 0.00573100260226056}, {"x": 1000, "y": 0.006059999577701092}, {"x": 1000, "y": 0.006459995347540826}, {"x": 1000, "y": 0.006210000719875097}, {"x": 1000, "y": 0.0075499992817640305}, {"x": 1000, "y": 0.006870002835057676}, {"x": 1000, "y": 0.00585000088904053}, {"x": 1000, "y": 0.006100002792663872}], "name": "use_list.runs", "showInLegend": false, "type": "scatter"}, {"color": "#ff7f0e", "dataPoints": [{"x": 1, "y": 0.0004500034265220165}, {"x": 10, "y": 0.0012200034689158201}, {"x": 100, "y": 0.0013000026228837669}, {"x": 1000, "y": 0.00573100260226056}, {"x": 10000, "y": 0.04578000516630709}, {"x": 100000, "y": 0.6012550002196804}, {"x": 1000000, "y": 12.59281300008297}, {"x": 10000000, "y": 153.3946669951547}, {"x": 50000000, "y": 749.4833070013556}], "name": "use_list", "showInLegend": true, "type": "spline"}, {"color": "#2ca02c", "dataPoints": [{"x": 50000000, "y": 0.0074499985203146935}, {"x": 50000000, "y": 0.006970003596507013}, {"x": 50000000, "y": 0.007959999493323267}, {"x": 50000000, "y": 0.0076599972089752555}, {"x": 50000000, "y": 0.006740003300365061}, {"x": 50000000, "y": 0.006789996405132115}, {"x": 50000000, "y": 0.007360999006778002}, {"x": 50000000, "y": 0.007520000508520752}, {"x": 50000000, "y": 0.007670001650694758}, {"x": 50000000, "y": 0.008000002708286047}, {"x": 1000000, "y": 0.006549998943228275}, {"x": 1000000, "y": 0.00646000262349844}, {"x": 1000000, "y": 0.00608999835094437}, {"x": 1000000, "y": 0.006559996108990163}, {"x": 1000000, "y": 0.006609996489714831}, {"x": 1000000, "y": 0.006449998181778938}, {"x": 1000000, "y": 0.0057299985201098025}, {"x": 1000000, "y": 0.005809997674077749}, {"x": 1000000, "y": 0.006050002411939204}, {"x": 1000000, "y": 0.006850001227576286}, {"x": 100, "y": 0.0014899997040629387}, {"x": 100, "y": 0.002740001946222037}, {"x": 100, "y": 0.001619999238755554}, {"x": 100, "y": 0.002230000973213464}, {"x": 100, "y": 0.0010000003385357559}, {"x": 100, "y": 0.0026999987312592566}, {"x": 100, "y": 0.002559994754847139}, {"x": 100, "y": 0.0021899977582506835}, {"x": 100, "y": 0.0008499991963617504}, {"x": 100, "y": 0.0014399993233382702}, {"x": 10000000, "y": 0.007419999747071415}, {"x": 10000000, "y": 0.007700000423938036}, {"x": 10000000, "y": 0.007219998224172741}, {"x": 10000000, "y": 0.007609996828250587}, {"x": 10000000, "y": 0.008230003004428}, {"x": 10000000, "y": 0.0076500000432133675}, {"x": 10000000, "y": 0.0073599949246272445}, {"x": 10000000, "y": 0.008089999028015882}, {"x": 10000000, "y": 0.0076400028774514794}, {"x": 10000000, "y": 0.006529997335746884}, {"x": 10000, "y": 0.0012300006346777081}, {"x": 10000, "y": 0.002230000973213464}, {"x": 10000, "y": 0.0006499976734630764}, {"x": 10000, "y": 0.0013300013961270452}, {"x": 10000, "y": 0.002940003469120711}, {"x": 10000, "y": 0.0015799960237927735}, {"x": 10000, "y": 0.0025900008040480316}, {"x": 10000, "y": 0.0004899993655271828}, {"x": 10000, "y": 0.0018400023691356182}, {"x": 10000, "y": 0.0019700019038282335}, {"x": 100000, "y": 0.004879999323748052}, {"x": 100000, "y": 0.0034900003811344504}, {"x": 100000, "y": 0.00323000131174922}, {"x": 100000, "y": 0.0037100035115145147}, {"x": 100000, "y": 0.003369998012203723}, {"x": 100000, "y": 0.003120003384537995}, {"x": 100000, "y": 0.002349996066186577}, {"x": 100000, "y": 0.003339999238960445}, {"x": 100000, "y": 0.005130001227371395}, {"x": 100000, "y": 0.0016499980119988322}, {"x": 1000, "y": 0.0025500048650428653}, {"x": 1000, "y": 0.0023600005079060793}, {"x": 1000, "y": 0.0011700030881911516}, {"x": 1000, "y": 0.0014899997040629387}, {"x": 1000, "y": 0.002430002496112138}, {"x": 1000, "y": 0.0018799983081407845}, {"x": 1000, "y": 0.003239998477511108}, {"x": 1000, "y": 0.00042000465327873826}, {"x": 1000, "y": 0.0005099936970509589}, {"x": 1000, "y": 0.0021500018192455173}, {"x": 1, "y": 0.0018099963199347258}, {"x": 1, "y": 0.0017900019884109497}, {"x": 1, "y": 0.001791006070561707}, {"x": 1, "y": 0.0010299991117790341}, {"x": 1, "y": 0.001309999788645655}, {"x": 1, "y": 0.0017599959392100573}, {"x": 1, "y": 0.001629996404517442}, {"x": 1, "y": 0.002410000888630748}, {"x": 1, "y": 0.0014600009308196604}, {"x": 1, "y": 0.0017499987734481692}, {"x": 10, "y": 0.0009400027920491993}, {"x": 10, "y": 0.0015400000847876072}, {"x": 10, "y": 0.0011400043149478734}, {"x": 10, "y": 0.0010000003385357559}, {"x": 10, "y": 0.002519998815841973}, {"x": 10, "y": 0.0010599978850223124}, {"x": 10, "y": 0.0004800021997652948}, {"x": 10, "y": 0.0013699973351322114}, {"x": 10, "y": 0.002349996066186577}, {"x": 10, "y": 0.001820000761654228}], "name": "use_iter.runs", "showInLegend": false, "type": "scatter"}, {"color": "#2ca02c", "dataPoints": [{"x": 1, "y": 0.0010299991117790341}, {"x": 10, "y": 0.0004800021997652948}, {"x": 100, "y": 0.0008499991963617504}, {"x": 1000, "y": 0.00042000465327873826}, {"x": 10000, "y": 0.0004899993655271828}, {"x": 100000, "y": 0.0016499980119988322}, {"x": 1000000, "y": 0.0057299985201098025}, {"x": 10000000, "y": 0.006529997335746884}, {"x": 50000000, "y": 0.006740003300365061}], "name": "use_iter", "showInLegend": true, "type": "spline"}]}, {"cls": "GetLastKey", "series": [{"color": "#1f77b4", "dataPoints": [{"x": 10, "y": 0.0038299986044876277}, {"x": 10, "y": 0.002950000634882599}, {"x": 10, "y": 0.0031800009310245514}, {"x": 10, "y": 0.0020900042727589607}, {"x": 10, "y": 0.0031199961085803807}, {"x": 10, "y": 0.0005099936970509589}, {"x": 10, "y": 0.0026810012059286237}, {"x": 10, "y": 0.0026600027922540903}, {"x": 10, "y": 0.0028600043151527643}, {"x": 10, "y": 0.0030999945010989904}, {"x": 10000, "y": 0.003560002369340509}, {"x": 10000, "y": 0.003830005880445242}, {"x": 10000, "y": 0.0028199938242323697}, {"x": 10000, "y": 0.003859997377730906}, {"x": 10000, "y": 0.002949993358924985}, {"x": 10000, "y": 0.005770001735072583}, {"x": 10000, "y": 0.003850000211969018}, {"x": 10000, "y": 0.0006799964467063546}, {"x": 10000, "y": 0.002939996193163097}, {"x": 10000, "y": 0.0029900038498453796}, {"x": 100000, "y": 0.0066300053731538355}, {"x": 100000, "y": 0.00632999581284821}, {"x": 100000, "y": 0.005219997547101229}, {"x": 100000, "y": 0.004239998816046864}, {"x": 100000, "y": 0.0058399964473210275}, {"x": 100000, "y": 0.005740002961829305}, {"x": 100000, "y": 0.0058299992815591395}, {"x": 100000, "y": 0.00467000063508749}, {"x": 100000, "y": 0.0063300030888058245}, {"x": 100000, "y": 0.0058399964473210275}, {"x": 1, "y": 0.003059998562093824}, {"x": 1, "y": 0.0036100027500651777}, {"x": 1, "y": 0.0021899977582506835}, {"x": 1, "y": 0.0034299955586902797}, {"x": 1, "y": 0.0031800009310245514}, {"x": 1, "y": 0.0006899936124682426}, {"x": 1, "y": 0.0036800047382712364}, {"x": 1, "y": 0.002519998815841973}, {"x": 1, "y": 0.0034900003811344504}, {"x": 1, "y": 0.0026800043997354805}, {"x": 100, "y": 0.0025999979698099196}, {"x": 100, "y": 0.002959997800644487}, {"x": 100, "y": 0.0030900046112947166}, {"x": 100, "y": 0.002519998815841973}, {"x": 100, "y": 0.004850000550504774}, {"x": 100, "y": 0.0037099962355569005}, {"x": 100, "y": 0.0022699969122186303}, {"x": 100, "y": 0.0031000017770566046}, {"x": 100, "y": 0.0031899980967864394}, {"x": 100, "y": 0.002910004695877433}, {"x": 10000000, "y": 0.010180003300774843}, {"x": 10000000, "y": 0.008629998774267733}, {"x": 10000000, "y": 0.008520000847056508}, {"x": 10000000, "y": 0.009880001016426831}, {"x": 10000000, "y": 0.009739997040014714}, {"x": 10000000, "y": 0.00910000380827114}, {"x": 10000000, "y": 0.009240000508725643}, {"x": 10000000, "y": 0.00870999792823568}, {"x": 10000000, "y": 0.009479997970629483}, {"x": 10000000, "y": 0.009129995305556804}, {"x": 1000, "y": 0.003179993655066937}, {"x": 1000, "y": 0.002529995981603861}, {"x": 1000, "y": 0.0030099981813691556}, {"x": 1000, "y": 0.0006600021151825786}, {"x": 1000, "y": 0.003621003997977823}, {"x": 1000, "y": 0.0037299978430382907}, {"x": 1000, "y": 0.002449996827635914}, {"x": 1000, "y": 0.0006799964467063546}, {"x": 1000, "y": 0.002519998815841973}, {"x": 1000, "y": 0.003740002284757793}, {"x": 1000000, "y": 0.008660004823468626}, {"x": 1000000, "y": 0.008269998943433166}, {"x": 1000000, "y": 0.009410003258381039}, {"x": 1000000, "y": 0.009449999197386205}, {"x": 1000000, "y": 0.009200004569720477}, {"x": 1000000, "y": 0.008759998308960348}, {"x": 1000000, "y": 0.008240000170189887}, {"x": 1000000, "y": 0.007540002116002142}, {"x": 1000000, "y": 0.008199996955227107}, {"x": 1000000, "y": 0.008670001989230514}, {"x": 50000000, "y": 0.00955999712459743}, {"x": 50000000, "y": 0.009129995305556804}, {"x": 50000000, "y": 0.00957999873207882}, {"x": 50000000, "y": 0.010151001333724707}, {"x": 50000000, "y": 0.009850002243183553}, {"x": 50000000, "y": 0.009101000614464283}, {"x": 50000000, "y": 0.00943000486586243}, {"x": 50000000, "y": 0.009641000360716134}, {"x": 50000000, "y": 0.00934000127017498}, {"x": 50000000, "y": 0.009329996828455478}], "name": "use_iter.runs", "showInLegend": false, "type": "scatter"}, {"color": "#1f77b4", "dataPoints": [{"x": 1, "y": 0.0006899936124682426}, {"x": 10, "y": 0.0005099936970509589}, {"x": 100, "y": 0.0022699969122186303}, {"x": 1000, "y": 0.0006600021151825786}, {"x": 10000, "y": 0.0006799964467063546}, {"x": 100000, "y": 0.004239998816046864}, {"x": 1000000, "y": 0.007540002116002142}, {"x": 10000000, "y": 0.008520000847056508}, {"x": 50000000, "y": 0.009101000614464283}], "name": "use_iter", "showInLegend": true, "type": "spline"}, {"color": "#ff7f0e", "dataPoints": [{"x": 10, "y": 0.001009997504297644}, {"x": 10, "y": 0.0010899966582655907}, {"x": 10, "y": 0.0012900054571218789}, {"x": 10, "y": 0.0007900016498751938}, {"x": 10, "y": 0.0009100040188059211}, {"x": 10, "y": 0.0011899974197149277}, {"x": 10, "y": 0.000700005330145359}, {"x": 10, "y": 0.0019500002963468432}, {"x": 10, "y": 0.0017499987734481692}, {"x": 10, "y": 0.0019500002963468432}, {"x": 10000, "y": 0.0015799960237927735}, {"x": 10000, "y": 0.0013500030036084354}, {"x": 10000, "y": 0.0013699973351322114}, {"x": 10000, "y": 0.0015400000847876072}, {"x": 10000, "y": 0.0025900008040480316}, {"x": 10000, "y": 0.000700005330145359}, {"x": 10000, "y": 0.0006699992809444666}, {"x": 10000, "y": 0.0007700000423938036}, {"x": 10000, "y": 0.0010799994925037026}, {"x": 10000, "y": 0.0024700057110749185}, {"x": 1000, "y": 0.0023799948394298553}, {"x": 1000, "y": 0.0011599986464716494}, {"x": 1000, "y": 0.001600004907231778}, {"x": 1000, "y": 0.0012599994079209864}, {"x": 1000, "y": 0.0011500014807097614}, {"x": 1000, "y": 0.0006999980541877449}, {"x": 1000, "y": 0.0009099967428483069}, {"x": 1000, "y": 0.0006499976734630764}, {"x": 1000, "y": 0.0022500025806948543}, {"x": 1000, "y": 0.0018599967006593943}, {"x": 100000, "y": 0.0016900012269616127}, {"x": 100000, "y": 0.0030000010156072676}, {"x": 100000, "y": 0.002639993908815086}, {"x": 100000, "y": 0.00344999716617167}, {"x": 100000, "y": 0.002929999027401209}, {"x": 100000, "y": 0.002739994670264423}, {"x": 100000, "y": 0.0037900026654824615}, {"x": 100000, "y": 0.0022000021999701858}, {"x": 100000, "y": 0.0030700030038133264}, {"x": 100000, "y": 0.00181000359589234}, {"x": 1, "y": 0.0010599978850223124}, {"x": 1, "y": 0.0005399997462518513}, {"x": 1, "y": 0.002020002284552902}, {"x": 1, "y": 0.0011800002539530396}, {"x": 1, "y": 0.0017699931049719453}, {"x": 1, "y": 0.001229993358720094}, {"x": 1, "y": 0.0009900031727738678}, {"x": 1, "y": 0.0014800025383010507}, {"x": 1, "y": 0.0006300033419393003}, {"x": 1, "y": 0.000290005118586123}, {"x": 10000000, "y": 0.00549999822396785}, {"x": 10000000, "y": 0.005590001819655299}, {"x": 10000000, "y": 0.005330002750270069}, {"x": 10000000, "y": 0.005480003892444074}, {"x": 10000000, "y": 0.006160000339150429}, {"x": 10000000, "y": 0.005879999662283808}, {"x": 10000000, "y": 0.0063200059230439365}, {"x": 10000000, "y": 0.006410002242773771}, {"x": 10000000, "y": 0.006219997885636985}, {"x": 10000000, "y": 0.005779998900834471}, {"x": 50000000, "y": 0.0063300030888058245}, {"x": 50000000, "y": 0.006269998266361654}, {"x": 50000000, "y": 0.006009999196976423}, {"x": 50000000, "y": 0.006170004780869931}, {"x": 50000000, "y": 0.005740002961829305}, {"x": 50000000, "y": 0.006379996193572879}, {"x": 50000000, "y": 0.006370006303768605}, {"x": 50000000, "y": 0.005330002750270069}, {"x": 50000000, "y": 0.005579997377935797}, {"x": 50000000, "y": 0.0055199998314492404}, {"x": 100, "y": 0.0012200034689158201}, {"x": 100, "y": 0.0008800052455626428}, {"x": 100, "y": 0.0019700019038282335}, {"x": 100, "y": 0.00242000533035025}, {"x": 100, "y": 0.0013899989426136017}, {"x": 100, "y": 0.0007599956006743014}, {"x": 100, "y": 0.0014800025383010507}, {"x": 100, "y": 0.0011299998732283711}, {"x": 100, "y": 0.00029999500839039683}, {"x": 100, "y": 0.0015699988580308855}, {"x": 1000000, "y": 0.005320005584508181}, {"x": 1000000, "y": 0.005120004061609507}, {"x": 1000000, "y": 0.005690002581104636}, {"x": 1000000, "y": 0.005449997843243182}, {"x": 1000000, "y": 0.004970002919435501}, {"x": 1000000, "y": 0.004919995262753218}, {"x": 1000000, "y": 0.005469999450724572}, {"x": 1000000, "y": 0.005199995939619839}, {"x": 1000000, "y": 0.005230001988820732}, {"x": 1000000, "y": 0.004399997123982757}], "name": "proposed(*).runs", "showInLegend": false, "type": "scatter"}, {"color": "#ff7f0e", "dataPoints": [{"x": 1, "y": 0.000290005118586123}, {"x": 10, "y": 0.000700005330145359}, {"x": 100, "y": 0.00029999500839039683}, {"x": 1000, "y": 0.0006499976734630764}, {"x": 10000, "y": 0.0006699992809444666}, {"x": 100000, "y": 0.0016900012269616127}, {"x": 1000000, "y": 0.004399997123982757}, {"x": 10000000, "y": 0.005330002750270069}, {"x": 50000000, "y": 0.005330002750270069}], "name": "proposed(*)", "showInLegend": true, "type": "spline"}, {"color": "#2ca02c", "dataPoints": [{"x": 10, "y": 0.00274099875241518}, {"x": 10, "y": 0.002749999111983925}, {"x": 10, "y": 0.0024600012693554163}, {"x": 10, "y": 0.002630004019010812}, {"x": 10, "y": 0.002749999111983925}, {"x": 10, "y": 0.0023800021153874695}, {"x": 10, "y": 0.001720000000204891}, {"x": 10, "y": 0.0025699991965666413}, {"x": 10, "y": 0.0011599986464716494}, {"x": 10, "y": 0.0021500018192455173}, {"x": 100000, "y": 0.6000150024192408}, {"x": 100000, "y": 0.7394759959424846}, {"x": 100000, "y": 0.7142760005081072}, {"x": 100000, "y": 0.7558159995824099}, {"x": 100000, "y": 0.7783959954394959}, {"x": 100000, "y": 0.8399969956371933}, {"x": 100000, "y": 0.8210769956349395}, {"x": 100000, "y": 0.8300570043502375}, {"x": 100000, "y": 0.706665996403899}, {"x": 100000, "y": 0.8458869997411966}, {"x": 1000000, "y": 13.331859001482371}, {"x": 1000000, "y": 14.013874999363907}, {"x": 1000000, "y": 14.546336999046616}, {"x": 1000000, "y": 14.000681003381032}, {"x": 1000000, "y": 14.70753699686611}, {"x": 1000000, "y": 13.707856996916234}, {"x": 1000000, "y": 13.893546994950157}, {"x": 1000000, "y": 14.747983994311653}, {"x": 1000000, "y": 14.467690998571925}, {"x": 1000000, "y": 15.395899994473439}, {"x": 10000000, "y": 161.52227699785726}, {"x": 10000000, "y": 165.07425899908412}, {"x": 10000000, "y": 153.69976699730614}, {"x": 10000000, "y": 154.81728599843336}, {"x": 10000000, "y": 154.13261300273007}, {"x": 10000000, "y": 155.10340600303607}, {"x": 10000000, "y": 155.3296650017728}, {"x": 10000000, "y": 156.43268799612997}, {"x": 10000000, "y": 154.94723900337704}, {"x": 10000000, "y": 155.39059200091287}, {"x": 1000, "y": 0.005779998900834471}, {"x": 1000, "y": 0.005770001735072583}, {"x": 1000, "y": 0.0065400017774663866}, {"x": 1000, "y": 0.006349997420329601}, {"x": 1000, "y": 0.005750000127591193}, {"x": 1000, "y": 0.007110000296961516}, {"x": 1000, "y": 0.005370005965232849}, {"x": 1000, "y": 0.004879999323748052}, {"x": 1000, "y": 0.0052299947128631175}, {"x": 1000, "y": 0.005859998054802418}, {"x": 100, "y": 0.003549997927621007}, {"x": 100, "y": 0.0027700007194653153}, {"x": 100, "y": 0.0033199976314790547}, {"x": 100, "y": 0.004339999577496201}, {"x": 100, "y": 0.001939995854627341}, {"x": 100, "y": 0.0020700026652775705}, {"x": 100, "y": 0.0029199945856817067}, {"x": 100, "y": 0.0016799967852421105}, {"x": 100, "y": 0.003140004992019385}, {"x": 100, "y": 0.001009997504297644}, {"x": 1, "y": 0.0030800001695752144}, {"x": 1, "y": 0.0033199976314790547}, {"x": 1, "y": 0.0026900015654973686}, {"x": 1, "y": 0.0012699965736828744}, {"x": 1, "y": 0.004379995516501367}, {"x": 1, "y": 0.0027900023269467056}, {"x": 1, "y": 0.0027999994927085936}, {"x": 1, "y": 0.0027700007194653153}, {"x": 1, "y": 0.0014400065992958844}, {"x": 1, "y": 0.002319997292943299}, {"x": 10000, "y": 0.04673000512411818}, {"x": 10000, "y": 0.04893000004813075}, {"x": 10000, "y": 0.04968999564880505}, {"x": 10000, "y": 0.04681100108427927}, {"x": 10000, "y": 0.04841999907512218}, {"x": 10000, "y": 0.04745100159198046}, {"x": 10000, "y": 0.046721004764549434}, {"x": 10000, "y": 0.06240099901333451}, {"x": 10000, "y": 0.04903099761577323}, {"x": 10000, "y": 0.047900000936351717}, {"x": 50000000, "y": 789.7654909975245}, {"x": 50000000, "y": 744.386697995651}, {"x": 50000000, "y": 805.4131160024554}, {"x": 50000000, "y": 764.8024089940009}, {"x": 50000000, "y": 791.3807420045487}, {"x": 50000000, "y": 758.1039520009654}, {"x": 50000000, "y": 755.2079840024817}, {"x": 50000000, "y": 760.5393039993942}, {"x": 50000000, "y": 777.3582819936564}, {"x": 50000000, "y": 787.5820670014946}], "name": "use_list.runs", "showInLegend": false, "type": "scatter"}, {"color": "#2ca02c", "dataPoints": [{"x": 1, "y": 0.0012699965736828744}, {"x": 10, "y": 0.0011599986464716494}, {"x": 100, "y": 0.001009997504297644}, {"x": 1000, "y": 0.004879999323748052}, {"x": 10000, "y": 0.046721004764549434}, {"x": 100000, "y": 0.6000150024192408}, {"x": 1000000, "y": 13.331859001482371}, {"x": 10000000, "y": 153.69976699730614}, {"x": 50000000, "y": 744.386697995651}], "name": "use_list", "showInLegend": true, "type": "spline"}]}];
+	const charts = [];
+
+	document.addEventListener('DOMContentLoaded', function() {
+		chart_data.forEach(function(data) {
+			const element_id = 'graph-' + data.cls;
+			document.getElementById(element_id).classList.remove('loading');
+			const chart = new CanvasJS.Chart(element_id, {
+				axisX:{
+					logarithmic: true,
+					titleFontSize: 14,
+					title: "Items in dict (log scale)", 
+					labelFontSize: 12
+				},
+				axisY:{
+					logarithmic: true,
+					titleFontSize: 14,
+					title: "Runtime (ms)", 
+					labelFontSize: 12
+				},
+    			legend: {
+                	cursor: "pointer",
+                	fontSize: 13,
+	                itemclick: function (e) {
+	                	const companion_name = e.dataSeries.name + ".runs";
+	                	const companion_series = e.chart.data.filter(function(ds) { 
+	                		return ds.name == companion_name 
+	                	})[0];
+
+	                	const is_visible = (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible);
+	                	const visibility = is_visible ? false : true;
+
+	                    e.dataSeries.visible = visibility;
+	                    if (companion_series) {
+	                    	companion_series.set('visible', visibility);
+	                    }
+	                    e.chart.render();
+	                }
+            	},
+				
+
+				data: data.series
+
+			});
+			chart.render();
+			charts.push(chart);
+		});
+	});
+
+	const x_log = document.getElementById('x-log-check');
+	x_log.addEventListener('change', function(e) {
+		charts.forEach(function(chart) {
+			chart.axisX[0].set('logarithmic', x_log.checked);
+		})
+	});
+
+	const y_log = document.getElementById('y-log-check');
+	y_log.addEventListener('change', function(e) {
+		charts.forEach(function(chart) {
+			chart.axisY[0].set('logarithmic', y_log.checked);
+		})
+	});
+
+</script>
+
+</body>
