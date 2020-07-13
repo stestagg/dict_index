@@ -99,9 +99,10 @@ def main():
         fn_name = result.case.method.__name__
         variant = result.case.variant
         nested_times[cls_name][fn_name][variant].append(result.took)
-        current_result = nested_results[cls_name].setdefault(variant, result.result)
-        if current_result != result.result:
-            raise AssertionError(f'Result mismatch: {cls_name}({variant}).{fn_name} returned {result.result}, previous: {current_result}')
+        if result.case.cls.CHECK_RESULTS:
+            current_result = nested_results[cls_name].setdefault(variant, result.result)
+            if current_result != result.result:
+                raise AssertionError(f'Result mismatch: {cls_name}({variant}).{fn_name} returned {result.result}, previous: {current_result}')
 
     output['results'] = nested_times
         

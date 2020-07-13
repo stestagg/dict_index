@@ -10,7 +10,8 @@ def make_dict(n):
 class Test:
     _TEST_METHODS = set()
     DICT_SIZES = {1, 10, 100, 1_000, 10_000, 100_000, 1_000_000, 10_000_000}
-    NUM_RUNS = 5
+    NUM_RUNS = 10
+    CHECK_RESULTS = True
 
     NAME = NotImplemented
 

@@ -6,10 +6,11 @@ import random
 class RandomSample(Test):
 
     NAME = "Retrieve random sample of items from dict"
+    CHECK_RESULTS = False
 
     def __init__(self, n):
         super().__init__(n)
-        random.seed(1)
+        random.seed()
         self.sample_size = min(len(self.values), 2000)
 
     @Test.method
@@ -24,10 +25,11 @@ class RandomSample(Test):
 class RandomChoice(Test):
 
     NAME = "Retrieve random item from dict"
+    CHECK_RESULTS = False
 
     def __init__(self, n):
         super().__init__(n)
-        random.seed(1)
+        random.seed()
         self.sample_size = min(len(self.values), 2000)
 
     @Test.method
