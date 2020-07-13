@@ -27,6 +27,32 @@ class GetFirstKey(Test):
         return self.values.keys()[0]
 
 
+class GetFirstItem(Test):
+
+    NAME = "Get first item"
+
+    @Test.method
+    def use_list(self):
+        """
+        Calling list on the dict
+        """
+        return list(self.values.items())[0]
+
+    @Test.method
+    def use_iter(self):
+        """
+        Calling iter on the view
+        """
+        return next(iter(self.values.items()))
+
+    @Test.method
+    def proposed(self):
+        """
+        Using view indexing
+        """
+        return self.values.items()[0]
+
+
 class GetLastKey(Test):
 
     NAME = "Get last key"

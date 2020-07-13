@@ -18,6 +18,8 @@ JINJA_ENV = Environment(
 
 HTML_FORMATTER = HtmlFormatter(style="monokai")
 COLORS = ('#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf')
+PROPOSAL_NAMES = {'proposed', 'keys_index', 'items_index'}
+
 
 def format_date(value, format='YYYY-MM-DD'):
     date = datetime.utcfromtimestamp(value)
@@ -25,7 +27,7 @@ def format_date(value, format='YYYY-MM-DD'):
 
 
 def format_code(code):
-    return Markup(highlight(code, PythonLexer(), HTML_FORMATTER))
+    return Markup(highlight(code.rstrip(), PythonLexer(), HTML_FORMATTER))
 
 
 JINJA_ENV.filters['date'] = format_date
@@ -59,6 +61,8 @@ def reshape_results(results):
         reshaped.append(cls_data)
 
         for i, (meth_name, variants) in enumerate(meth_results.items()):
+            if meth_name in PROPOSAL_NAMES:
+                meth_name = f'{meth_name}(*)'
             points = []
             point_data = {
                 'name': f'{ meth_name }.runs',
@@ -94,7 +98,8 @@ def make_results_page(results, dest):
     content = JINJA_ENV.get_template('results.html').render(
         results=results, 
         style=style, 
-        chart_data=chart_data
+        chart_data=chart_data,
+        PROPOSAL_NAMES=PROPOSAL_NAMES,
     )
     dest.write_text(content)
 
