@@ -1,5 +1,5 @@
 diff --git a/Objects/dictobject.c b/Objects/dictobject.c
-index b1f11b3e69..b1b6c30466 100644
+index b1f11b3e69..27963a3ea9 100644
 --- a/Objects/dictobject.c
 +++ b/Objects/dictobject.c
 @@ -4107,6 +4107,79 @@ dictview_len(_PyDictViewObject *dv)
@@ -55,7 +55,7 @@ index b1f11b3e69..b1b6c30466 100644
 +
 +    PyDictKeyEntry *entry_ptr = DK_ENTRIES(dict->ma_keys);
 +    while(index) {
-+        if (entry_ptr != NULL) {
++        if (entry_ptr->me_value != NULL) {
 +            index--;
 +        }
 +        entry_ptr++;
