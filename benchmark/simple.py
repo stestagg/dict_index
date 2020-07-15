@@ -1,5 +1,5 @@
 from benchmark.base import Test, make_dict
-
+import itertools
 
 class GetFirstKey(Test):
 
@@ -166,3 +166,48 @@ class IterItems(Test):
         for item in iter(self.values.items()):
             last_item = item
         return last_item
+
+
+class GetMiddleValue(Test):
+
+    NAME = "Get a value from the middle"
+
+    def __init__(self, n):
+        super().__init__(n)
+        self.index = min((n // 2), n-1)
+
+    @Test.method
+    def use_list(self):
+        """
+        Calling list on the dict
+        """
+        return list(self.values.values())[self.index]
+
+    @Test.method
+    def use_iter(self):
+        """
+        Calling iter on the keys
+        """
+        return next(itertools.islice(
+            self.values.values(), 
+            self.index, 
+            self.index+1)
+        )
+
+    @Test.method
+    def iter_2(self):
+        """
+        Count over the iter results
+        """
+        left = self.index
+        for value in self.values.values():
+            if left == 0:
+                return value
+            left -= 1
+
+    @Test.method
+    def proposed(self):
+        """
+        Using keys indexing
+        """
+        return self.values.values()[self.index]

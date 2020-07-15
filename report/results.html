@@ -89,9 +89,15 @@
 			top: 0;
 			right: 20px;
 			padding: 0 10px;
+			z-index: 100;
 		}
 		#graphmenu label{
 			margin: 10px;
+		}
+
+		table.results{
+			margin: auto;
+			margin-bottom: 20px;
 		}
 
 		{{style}}
@@ -190,6 +196,34 @@
 		</div>
 
 		<div class="graph loading" id="graph-{{cls_name}}"></div>
+
+		<h5>Best Times</h5>
+		{% with times=table_data[cls_name] %}
+			<table class=results>
+				<thead>
+					<tr>
+						<th rowspan=2>Method</th>
+						<th colspan={{ times.variants|length }}>Dict Size</th>
+					</tr>
+					<tr>
+						{% for var in times.variants %}
+						<th>{{ var|num }}</th>
+						{% endfor %}
+					</tr>
+				</thead>
+				<tbody>
+					{% for meth_name, run_times in times.meth.items() %}
+					<tr>
+						<th>{{ meth_name }}</th>
+						{% for time in run_times %}
+						<td>{{ "{:,.2f}".format(time * 1000) }} &micro;s</td>
+						{% endfor %}
+					</tr>
+					{% endfor %}
+
+				</tbody>
+			</table>
+		{% endwith %}
 	</div>
 	{% endfor %}
 

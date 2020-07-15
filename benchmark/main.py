@@ -11,6 +11,7 @@ from pathlib import Path
 from benchmark.base import Test
 import benchmark.simple
 import benchmark.test_random
+import benchmark.repeated
 
 from tqdm import tqdm
 import psutil

@@ -17,7 +17,8 @@ JINJA_ENV = Environment(
 )
 
 HTML_FORMATTER = HtmlFormatter(style="monokai")
-COLORS = ('#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf')
+PROPOSAL_COLOR = '#2ca02c'
+COLORS = ('#1f77b4', '#ff7f0e', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf')
 PROPOSAL_NAMES = {'proposed', 'keys_index', 'items_index'}
 
 
@@ -51,7 +52,7 @@ def make_index(results, dest):
     dest.write_text(content)
 
 
-def reshape_results(results):
+def reshape_results_for_chart(results):
     reshaped = []
     for cls_name, meth_results in results.items():
         cls_data = {
@@ -61,12 +62,14 @@ def reshape_results(results):
         reshaped.append(cls_data)
 
         for i, (meth_name, variants) in enumerate(meth_results.items()):
+            color = COLORS[i]
             if meth_name in PROPOSAL_NAMES:
                 meth_name = f'{meth_name}(*)'
+                color = PROPOSAL_COLOR
             points = []
             point_data = {
                 'name': f'{ meth_name }.runs',
-                'color': COLORS[i],
+                'color': color,
                 'type': 'scatter',
                 'showInLegend': False,
                 'dataPoints': points
@@ -75,7 +78,7 @@ def reshape_results(results):
             mins = []
             min_data = {
                 'name': meth_name,
-                'color': COLORS[i],
+                'color': color,
                 'type': 'spline',
                 'showInLegend': True,
                 'dataPoints': mins
@@ -90,15 +93,39 @@ def reshape_results(results):
             mins.sort(key=lambda x: x['x'])
     return reshaped
 
+def reshape_results_for_table(results):
+    reshaped = {}
+    for cls_name, meth_raw in results.items():
+        cls_results = {}
+        cls_variants = set()
+        reshaped[cls_name] = cls_results
+        
+        for meth_name, variants in meth_raw.items():
+            cls_variants.update(variants.keys())
+
+        cls_variants = sorted(int(v) for v in cls_variants)
+        cls_results['variants'] = cls_variants
+        meth_results = {}
+        cls_results['meth'] = meth_results
+
+        for meth_name, variants in meth_raw.items():
+            meth_results[meth_name] = [None] * len(cls_variants)
+            for i, variant in enumerate(cls_variants):
+                times = variants.get(str(variant))
+                if times is not None:
+                    meth_results[meth_name][i] = min(times)
+    return reshaped
 
 
 def make_results_page(results, dest):
     style = HTML_FORMATTER.get_style_defs()
-    chart_data = reshape_results(results['results'])
+    chart_data = reshape_results_for_chart(results['results'])
+    table_data = reshape_results_for_table(results['results'])
     content = JINJA_ENV.get_template('results.html').render(
         results=results, 
         style=style, 
         chart_data=chart_data,
+        table_data=table_data,
         PROPOSAL_NAMES=PROPOSAL_NAMES,
     )
     dest.write_text(content)
