@@ -3,15 +3,15 @@ import time
 def make_dict(n):
 	result = {}
 	for i in range(n):
-		result[i] = i % 763
+		result[i] = i % 255
 	return result
 
 
 class Test:
     _TEST_METHODS = set()
     CHECK_RESULTS = True
-    DICT_SIZES = {1, 10, 100, 1_000, 10_000, 100_000, 1_000_000}#, 5_000_000}
-    NUM_RUNS = 10
+    DICT_SIZES = {1, 10, 100, 1_000, 10_000, 100_000, 1_000_000, 5_000_000}
+    NUM_RUNS = 2
 
     NAME = NotImplemented
 
@@ -43,9 +43,9 @@ class Test:
     @classmethod
     def run_test(cls, variant, method):
         inst = cls(variant)
-        before = time.perf_counter()
+        before = time.process_time()
         result = method(inst)
-        after = time.perf_counter()
+        after = time.process_time()
         return result, (after-before) * 1_000
 
     def __init__(self, n):
