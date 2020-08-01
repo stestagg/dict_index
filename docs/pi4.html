@@ -1,0 +1,1839 @@
+<!doctype html>
+
+<head>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet"> 
+	<style>
+		body{
+			font-family: 'Noto Sans JP', sans-serif;
+		}
+
+		table,td,th{
+			border-collapse: collapse;			
+			border: 1px solid #aaa;
+			text-align: left;
+		}
+		td,th{
+			padding: 2px 7px;
+		}
+		th{
+			background: #888;
+			color: white;
+			font-weight: bold;
+		}
+
+		.methods {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-around;
+		}
+
+		.methods .method {
+			box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
+			border-radius: 5px;
+			margin: 10px;
+			background: white;
+			display: flex;
+			flex-direction: column;
+		}
+		.method .defn{
+			padding: 10px;
+			margin: 0;
+			background: #272822;
+			flex-grow: 1;
+			border-bottom-left-radius: 5px;
+			border-bottom-right-radius: 5px;
+		}
+		pre{
+			margin:0;
+			background: #272822;
+		}
+		.method .name {
+			padding: 10px;
+			border-top-left-radius: 5px;
+			border-top-right-radius: 5px;
+		}
+
+		.graph {
+			width: 800px;
+			height: 600px;
+			margin: auto;
+			box-shadow: 3px 3px 3px rgba(0,0,0,0.2);
+		}
+		.graph.loading{
+			background: #eee;
+			box-shadow: 0 0 30px inset rgba(0,0,0, 0.3);
+			text-align: center;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+		}
+		.graph.loading::after{
+			content: "Loading";
+			font-style: italic;
+
+		}
+
+		.test {
+			background: #eee;
+			padding: 5px;
+			box-sizing: border-box;
+			margin: 20px 10px;
+			box-shadow: 3px 3px 4px rgba(0,0,0,0.15);
+		}
+
+		#graphmenu {
+			background: #666;
+			color: white;
+			position: fixed;
+			top: 0;
+			right: 20px;
+			padding: 0 10px;
+			z-index: 100;
+		}
+		#graphmenu label{
+			margin: 10px;
+		}
+
+		table.results{
+			margin: auto;
+			margin-bottom: 20px;
+		}
+
+		.hll { background-color: #49483e }
+.c { color: #75715e } /* Comment */
+.err { color: #960050; background-color: #1e0010 } /* Error */
+.k { color: #66d9ef } /* Keyword */
+.l { color: #ae81ff } /* Literal */
+.n { color: #f8f8f2 } /* Name */
+.o { color: #f92672 } /* Operator */
+.p { color: #f8f8f2 } /* Punctuation */
+.ch { color: #75715e } /* Comment.Hashbang */
+.cm { color: #75715e } /* Comment.Multiline */
+.cp { color: #75715e } /* Comment.Preproc */
+.cpf { color: #75715e } /* Comment.PreprocFile */
+.c1 { color: #75715e } /* Comment.Single */
+.cs { color: #75715e } /* Comment.Special */
+.gd { color: #f92672 } /* Generic.Deleted */
+.ge { font-style: italic } /* Generic.Emph */
+.gi { color: #a6e22e } /* Generic.Inserted */
+.go { color: #66d9ef } /* Generic.Output */
+.gp { color: #f92672; font-weight: bold } /* Generic.Prompt */
+.gs { font-weight: bold } /* Generic.Strong */
+.gu { color: #75715e } /* Generic.Subheading */
+.kc { color: #66d9ef } /* Keyword.Constant */
+.kd { color: #66d9ef } /* Keyword.Declaration */
+.kn { color: #f92672 } /* Keyword.Namespace */
+.kp { color: #66d9ef } /* Keyword.Pseudo */
+.kr { color: #66d9ef } /* Keyword.Reserved */
+.kt { color: #66d9ef } /* Keyword.Type */
+.ld { color: #e6db74 } /* Literal.Date */
+.m { color: #ae81ff } /* Literal.Number */
+.s { color: #e6db74 } /* Literal.String */
+.na { color: #a6e22e } /* Name.Attribute */
+.nb { color: #f8f8f2 } /* Name.Builtin */
+.nc { color: #a6e22e } /* Name.Class */
+.no { color: #66d9ef } /* Name.Constant */
+.nd { color: #a6e22e } /* Name.Decorator */
+.ni { color: #f8f8f2 } /* Name.Entity */
+.ne { color: #a6e22e } /* Name.Exception */
+.nf { color: #a6e22e } /* Name.Function */
+.nl { color: #f8f8f2 } /* Name.Label */
+.nn { color: #f8f8f2 } /* Name.Namespace */
+.nx { color: #a6e22e } /* Name.Other */
+.py { color: #f8f8f2 } /* Name.Property */
+.nt { color: #f92672 } /* Name.Tag */
+.nv { color: #f8f8f2 } /* Name.Variable */
+.ow { color: #f92672 } /* Operator.Word */
+.w { color: #f8f8f2 } /* Text.Whitespace */
+.mb { color: #ae81ff } /* Literal.Number.Bin */
+.mf { color: #ae81ff } /* Literal.Number.Float */
+.mh { color: #ae81ff } /* Literal.Number.Hex */
+.mi { color: #ae81ff } /* Literal.Number.Integer */
+.mo { color: #ae81ff } /* Literal.Number.Oct */
+.sa { color: #e6db74 } /* Literal.String.Affix */
+.sb { color: #e6db74 } /* Literal.String.Backtick */
+.sc { color: #e6db74 } /* Literal.String.Char */
+.dl { color: #e6db74 } /* Literal.String.Delimiter */
+.sd { color: #e6db74 } /* Literal.String.Doc */
+.s2 { color: #e6db74 } /* Literal.String.Double */
+.se { color: #ae81ff } /* Literal.String.Escape */
+.sh { color: #e6db74 } /* Literal.String.Heredoc */
+.si { color: #e6db74 } /* Literal.String.Interpol */
+.sx { color: #e6db74 } /* Literal.String.Other */
+.sr { color: #e6db74 } /* Literal.String.Regex */
+.s1 { color: #e6db74 } /* Literal.String.Single */
+.ss { color: #e6db74 } /* Literal.String.Symbol */
+.bp { color: #f8f8f2 } /* Name.Builtin.Pseudo */
+.fm { color: #a6e22e } /* Name.Function.Magic */
+.vc { color: #f8f8f2 } /* Name.Variable.Class */
+.vg { color: #f8f8f2 } /* Name.Variable.Global */
+.vi { color: #f8f8f2 } /* Name.Variable.Instance */
+.vm { color: #f8f8f2 } /* Name.Variable.Magic */
+.il { color: #ae81ff } /* Literal.Number.Integer.Long */
+	</style>
+</head>
+
+<body>
+	<h1>Dict views index performance comparison - Results</h1>
+
+	<a href="./">Return to listing</a>
+
+	<div id="graphmenu">
+		<label>
+			<input type=checkbox id="x-log-check" checked>
+			X-Log
+		</label>
+		<label>
+			<input type=checkbox id="y-log-check" checked>
+			Y-Log
+		</label>
+	</div>
+
+	<h3>Overview</h3>
+
+	<p>The following tests are designed to assess the performance of a proposed change to the python core language to support direct indexing of dict_keys, dict_items and dict_views objects.</p>
+
+	<p>The change would allow the results of dict.keys(), dict.items() and dict.values() to behave much more like lists.</p>
+
+	<p>Currently, it's only possible to implement dictionary indexing in O(n) time, as dict deletions leave 'holes' in the compact in-memory dictionary structure.  This linear cost, however, is not large.</p>
+
+	<p>The following graphs show the time taken for python to evaluate several variations of a number of simple dictionary operations.  These examples are designed to be instuctive, and representative of only the simplest operations.</p>
+
+	<p>
+		Some of the code being tested is code that should never be used in real code, as it exhibits strongly non-linear performance characteristics. They have been included her to demonstrate this fact.
+	</p>
+
+	<p>
+		If there are any examples missing, or alternate syntaxes that may be more performant, please submit an issue or pull request here: <a href="https://github.com/stestagg/dict_index">github.com/stestagg/dict_index</a>
+	</p>
+
+	<p>Code annotated with "(*)" are snippets that do not run without the patches included in this change.  They demonstrate the performance of allowing direct indexing of dict views.</p>
+
+
+
+	<h3>Test Environment</h3>
+	<table>
+		<thead>
+			<tr>
+				<th>Property</th>
+				<th>Value</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Run Time</td>
+				<td>2020-08-01 12:40:08</td>
+			</tr>
+			
+				<tr>
+					<td>memory</td>
+					<td>
+						
+							Total: <b>2.0 GB</b>
+							Available at start: <b>1.9 GB</b>
+						
+					</td>
+				</tr>
+			
+				<tr>
+					<td>release</td>
+					<td>
+						
+							<b>5.4.51-1-ARCH</b>
+						
+					</td>
+				</tr>
+			
+				<tr>
+					<td>system</td>
+					<td>
+						
+							<b>Linux</b>
+						
+					</td>
+				</tr>
+			
+				<tr>
+					<td>processor</td>
+					<td>
+						
+							<b>ARMv7 Processor rev 3 (v7l)</b>
+						
+					</td>
+				</tr>
+			
+				<tr>
+					<td>python_compiler</td>
+					<td>
+						
+							<b>GCC 9.3.0</b>
+						
+					</td>
+				</tr>
+			
+				<tr>
+					<td>python_build</td>
+					<td>
+						
+							<b>[&#39;remotes/origin/HEAD-dirty:5c3270939c&#39;, &#39;Aug  1 2020 09:41:11&#39;]</b>
+						
+					</td>
+				</tr>
+			
+				<tr>
+					<td>python_implementation</td>
+					<td>
+						
+							<b>CPython</b>
+						
+					</td>
+				</tr>
+			
+				<tr>
+					<td>python_revision</td>
+					<td>
+						
+							<b>5c3270939c</b>
+						
+					</td>
+				</tr>
+			
+		</tbody>
+	</table>
+
+	<h3>Tests</h3>
+
+	<ul>
+		
+			<li><a href="#GetFirstKey">Get first key</a></li>
+		
+			<li><a href="#GetFirstItem">Get first item</a></li>
+		
+			<li><a href="#GetLastKey">Get last key</a></li>
+		
+			<li><a href="#IterKeys">Iterate over all keys</a></li>
+		
+			<li><a href="#IterItems">Iterate over all items</a></li>
+		
+			<li><a href="#GetMiddleValue">Get a value from the middle</a></li>
+		
+			<li><a href="#RandomSample">Retrieve random sample of items from dict</a></li>
+		
+			<li><a href="#RandomChoice">Retrieve random item from dict</a></li>
+		
+			<li><a href="#RepeatedAccess">Access 100k items by index</a></li>
+		
+			<li><a href="#GetLastKeyWithHoles">Get last key from a dict that has had entries removed (branch misses)</a></li>
+		
+
+	</ul>
+
+	
+	<div class="test">
+		<h4><a name="GetFirstKey">Get first key</a></h4>
+
+		Best of <b>5</b> runs, over dictionaries with <b>1 - 500,000</b> items.
+
+		<div class=methods>
+			
+			<div class=method>
+				<div class=name>use_list</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">use_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calling list on the dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>use_iter</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">use_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calling iter on the keys</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>proposed(*)</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">proposed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Using keys indexing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+			</div>
+			
+		</div>
+
+		<div class="graph loading" id="graph-GetFirstKey"></div>
+
+		<h5>Best Times</h5>
+		
+			<table class=results>
+				<thead>
+					<tr>
+						<th rowspan=2>Method</th>
+						<th colspan=7>Dict Size</th>
+					</tr>
+					<tr>
+						
+						<th>1</th>
+						
+						<th>10</th>
+						
+						<th>100</th>
+						
+						<th>1,000</th>
+						
+						<th>10,000</th>
+						
+						<th>100,000</th>
+						
+						<th>500,000</th>
+						
+					</tr>
+				</thead>
+				<tbody>
+					
+					<tr>
+						<th>use_iter</th>
+						
+						<td>7.19 &micro;s</td>
+						
+						<td>6.45 &micro;s</td>
+						
+						<td>7.28 &micro;s</td>
+						
+						<td>8.59 &micro;s</td>
+						
+						<td>10.04 &micro;s</td>
+						
+						<td>19.91 &micro;s</td>
+						
+						<td>30.02 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>proposed</th>
+						
+						<td>5.74 &micro;s</td>
+						
+						<td>6.80 &micro;s</td>
+						
+						<td>7.44 &micro;s</td>
+						
+						<td>10.76 &micro;s</td>
+						
+						<td>9.02 &micro;s</td>
+						
+						<td>18.15 &micro;s</td>
+						
+						<td>27.33 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>use_list</th>
+						
+						<td>7.89 &micro;s</td>
+						
+						<td>7.35 &micro;s</td>
+						
+						<td>11.11 &micro;s</td>
+						
+						<td>32.11 &micro;s</td>
+						
+						<td>251.50 &micro;s</td>
+						
+						<td>4,411.30 &micro;s</td>
+						
+						<td>28,502.41 &micro;s</td>
+						
+					</tr>
+					
+
+				</tbody>
+			</table>
+		
+	</div>
+	
+	<div class="test">
+		<h4><a name="GetFirstItem">Get first item</a></h4>
+
+		Best of <b>5</b> runs, over dictionaries with <b>1 - 500,000</b> items.
+
+		<div class=methods>
+			
+			<div class=method>
+				<div class=name>use_list</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">use_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calling list on the dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>use_iter</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">use_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calling iter on the view</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>proposed(*)</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">proposed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Using view indexing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+			</div>
+			
+		</div>
+
+		<div class="graph loading" id="graph-GetFirstItem"></div>
+
+		<h5>Best Times</h5>
+		
+			<table class=results>
+				<thead>
+					<tr>
+						<th rowspan=2>Method</th>
+						<th colspan=7>Dict Size</th>
+					</tr>
+					<tr>
+						
+						<th>1</th>
+						
+						<th>10</th>
+						
+						<th>100</th>
+						
+						<th>1,000</th>
+						
+						<th>10,000</th>
+						
+						<th>100,000</th>
+						
+						<th>500,000</th>
+						
+					</tr>
+				</thead>
+				<tbody>
+					
+					<tr>
+						<th>proposed</th>
+						
+						<td>6.55 &micro;s</td>
+						
+						<td>6.35 &micro;s</td>
+						
+						<td>7.20 &micro;s</td>
+						
+						<td>6.59 &micro;s</td>
+						
+						<td>9.94 &micro;s</td>
+						
+						<td>19.20 &micro;s</td>
+						
+						<td>27.78 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>use_list</th>
+						
+						<td>7.69 &micro;s</td>
+						
+						<td>9.96 &micro;s</td>
+						
+						<td>26.15 &micro;s</td>
+						
+						<td>125.39 &micro;s</td>
+						
+						<td>2,850.20 &micro;s</td>
+						
+						<td>28,888.07 &micro;s</td>
+						
+						<td>147,791.81 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>use_iter</th>
+						
+						<td>5.87 &micro;s</td>
+						
+						<td>7.37 &micro;s</td>
+						
+						<td>7.15 &micro;s</td>
+						
+						<td>7.76 &micro;s</td>
+						
+						<td>16.35 &micro;s</td>
+						
+						<td>22.67 &micro;s</td>
+						
+						<td>31.26 &micro;s</td>
+						
+					</tr>
+					
+
+				</tbody>
+			</table>
+		
+	</div>
+	
+	<div class="test">
+		<h4><a name="GetLastKey">Get last key</a></h4>
+
+		Best of <b>5</b> runs, over dictionaries with <b>1 - 500,000</b> items.
+
+		<div class=methods>
+			
+			<div class=method>
+				<div class=name>use_list</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">use_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>use_iter</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">use_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>proposed(*)</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">proposed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+			</div>
+			
+		</div>
+
+		<div class="graph loading" id="graph-GetLastKey"></div>
+
+		<h5>Best Times</h5>
+		
+			<table class=results>
+				<thead>
+					<tr>
+						<th rowspan=2>Method</th>
+						<th colspan=7>Dict Size</th>
+					</tr>
+					<tr>
+						
+						<th>1</th>
+						
+						<th>10</th>
+						
+						<th>100</th>
+						
+						<th>1,000</th>
+						
+						<th>10,000</th>
+						
+						<th>100,000</th>
+						
+						<th>500,000</th>
+						
+					</tr>
+				</thead>
+				<tbody>
+					
+					<tr>
+						<th>use_iter</th>
+						
+						<td>8.13 &micro;s</td>
+						
+						<td>10.70 &micro;s</td>
+						
+						<td>14.89 &micro;s</td>
+						
+						<td>11.17 &micro;s</td>
+						
+						<td>13.46 &micro;s</td>
+						
+						<td>25.96 &micro;s</td>
+						
+						<td>36.44 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>proposed</th>
+						
+						<td>5.52 &micro;s</td>
+						
+						<td>6.30 &micro;s</td>
+						
+						<td>6.43 &micro;s</td>
+						
+						<td>10.43 &micro;s</td>
+						
+						<td>27.96 &micro;s</td>
+						
+						<td>593.50 &micro;s</td>
+						
+						<td>2,051.35 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>use_list</th>
+						
+						<td>7.74 &micro;s</td>
+						
+						<td>7.43 &micro;s</td>
+						
+						<td>9.11 &micro;s</td>
+						
+						<td>32.54 &micro;s</td>
+						
+						<td>270.31 &micro;s</td>
+						
+						<td>4,440.89 &micro;s</td>
+						
+						<td>27,958.98 &micro;s</td>
+						
+					</tr>
+					
+
+				</tbody>
+			</table>
+		
+	</div>
+	
+	<div class="test">
+		<h4><a name="IterKeys">Iterate over all keys</a></h4>
+
+		Best of <b>5</b> runs, over dictionaries with <b>1 - 500,000</b> items.
+
+		<div class=methods>
+			
+			<div class=method>
+				<div class=name>list_index</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">list_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This is a bad way of doing this &quot;&quot;&quot;</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)):</span>
+        <span class="n">last_key</span> <span class="o">=</span> <span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">last_key</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>list_iter</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">list_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This is a bad way of doing this &quot;&quot;&quot;</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="n">last_key</span> <span class="o">=</span> <span class="n">key</span>
+    <span class="k">return</span> <span class="n">last_key</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>direct_iter</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">direct_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">last_key</span> <span class="o">=</span> <span class="n">key</span>
+    <span class="k">return</span> <span class="n">last_key</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>keys_index(*)</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">keys_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Using keys indexing. This approach is *not* recommended,</span>
+<span class="sd">    but included here to assess the performance of sitations</span>
+<span class="sd">    where this may be done in &#39;error&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)):</span>
+        <span class="n">last_key</span> <span class="o">=</span> <span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">last_key</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>iter_keys</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">iter_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Using the sensible iter()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="n">last_key</span> <span class="o">=</span> <span class="n">key</span>
+    <span class="k">return</span> <span class="n">last_key</span>
+</pre></div>
+</div>
+			</div>
+			
+		</div>
+
+		<div class="graph loading" id="graph-IterKeys"></div>
+
+		<h5>Best Times</h5>
+		
+			<table class=results>
+				<thead>
+					<tr>
+						<th rowspan=2>Method</th>
+						<th colspan=7>Dict Size</th>
+					</tr>
+					<tr>
+						
+						<th>1</th>
+						
+						<th>10</th>
+						
+						<th>100</th>
+						
+						<th>1,000</th>
+						
+						<th>10,000</th>
+						
+						<th>100,000</th>
+						
+						<th>500,000</th>
+						
+					</tr>
+				</thead>
+				<tbody>
+					
+					<tr>
+						<th>direct_iter</th>
+						
+						<td>5.93 &micro;s</td>
+						
+						<td>7.59 &micro;s</td>
+						
+						<td>11.13 &micro;s</td>
+						
+						<td>59.39 &micro;s</td>
+						
+						<td>519.20 &micro;s</td>
+						
+						<td>5,399.50 &micro;s</td>
+						
+						<td>26,108.91 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>list_iter</th>
+						
+						<td>9.06 &micro;s</td>
+						
+						<td>12.85 &micro;s</td>
+						
+						<td>15.24 &micro;s</td>
+						
+						<td>79.42 &micro;s</td>
+						
+						<td>692.54 &micro;s</td>
+						
+						<td>9,948.80 &micro;s</td>
+						
+						<td>55,367.35 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>iter_keys</th>
+						
+						<td>7.09 &micro;s</td>
+						
+						<td>7.89 &micro;s</td>
+						
+						<td>11.70 &micro;s</td>
+						
+						<td>59.17 &micro;s</td>
+						
+						<td>528.43 &micro;s</td>
+						
+						<td>5,846.00 &micro;s</td>
+						
+						<td>29,138.72 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>keys_index</th>
+						
+						<td>9.02 &micro;s</td>
+						
+						<td>10.37 &micro;s</td>
+						
+						<td>32.70 &micro;s</td>
+						
+						<td>1,166.68 &micro;s</td>
+						
+						<td>103,624.30 &micro;s</td>
+						
+						<td>11,277,766.37 &micro;s</td>
+						
+						<td>326,436,172.96 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>list_index</th>
+						
+						<td>11.98 &micro;s</td>
+						
+						<td>10.72 &micro;s</td>
+						
+						<td>26.15 &micro;s</td>
+						
+						<td>167.24 &micro;s</td>
+						
+						<td>1,648.78 &micro;s</td>
+						
+						<td>19,421.50 &micro;s</td>
+						
+						<td>100,304.69 &micro;s</td>
+						
+					</tr>
+					
+
+				</tbody>
+			</table>
+		
+	</div>
+	
+	<div class="test">
+		<h4><a name="IterItems">Iterate over all items</a></h4>
+
+		Best of <b>5</b> runs, over dictionaries with <b>1 - 500,000</b> items.
+
+		<div class=methods>
+			
+			<div class=method>
+				<div class=name>list_index</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">list_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This is a bad way of doing this &quot;&quot;&quot;</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)):</span>
+        <span class="n">last_item</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">last_item</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>list_iter</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">list_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; This is a bad way of doing this &quot;&quot;&quot;</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+        <span class="n">last_item</span> <span class="o">=</span> <span class="n">item</span>
+    <span class="k">return</span> <span class="n">last_item</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>direct_iter</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">direct_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">last_item</span> <span class="o">=</span> <span class="n">item</span>
+    <span class="k">return</span> <span class="n">last_item</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>items_index(*)</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">items_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Using items indexing. This approach is *not* recommended,</span>
+<span class="sd">    but included here to assess the performance of sitations</span>
+<span class="sd">    where this may be done in &#39;error&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)):</span>
+        <span class="n">last_item</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">last_item</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>iter_items</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">iter_items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Using the sensible iter()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+        <span class="n">last_item</span> <span class="o">=</span> <span class="n">item</span>
+    <span class="k">return</span> <span class="n">last_item</span>
+</pre></div>
+</div>
+			</div>
+			
+		</div>
+
+		<div class="graph loading" id="graph-IterItems"></div>
+
+		<h5>Best Times</h5>
+		
+			<table class=results>
+				<thead>
+					<tr>
+						<th rowspan=2>Method</th>
+						<th colspan=7>Dict Size</th>
+					</tr>
+					<tr>
+						
+						<th>1</th>
+						
+						<th>10</th>
+						
+						<th>100</th>
+						
+						<th>1,000</th>
+						
+						<th>10,000</th>
+						
+						<th>100,000</th>
+						
+						<th>500,000</th>
+						
+					</tr>
+				</thead>
+				<tbody>
+					
+					<tr>
+						<th>list_index</th>
+						
+						<td>9.30 &micro;s</td>
+						
+						<td>18.43 &micro;s</td>
+						
+						<td>37.74 &micro;s</td>
+						
+						<td>257.72 &micro;s</td>
+						
+						<td>4,044.68 &micro;s</td>
+						
+						<td>44,513.06 &micro;s</td>
+						
+						<td>224,318.55 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>list_iter</th>
+						
+						<td>8.70 &micro;s</td>
+						
+						<td>10.67 &micro;s</td>
+						
+						<td>29.87 &micro;s</td>
+						
+						<td>168.46 &micro;s</td>
+						
+						<td>3,154.07 &micro;s</td>
+						
+						<td>32,412.46 &micro;s</td>
+						
+						<td>174,551.00 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>items_index</th>
+						
+						<td>9.98 &micro;s</td>
+						
+						<td>12.57 &micro;s</td>
+						
+						<td>45.35 &micro;s</td>
+						
+						<td>1,322.93 &micro;s</td>
+						
+						<td>106,041.41 &micro;s</td>
+						
+						<td>11,223,158.32 &micro;s</td>
+						
+						<td>327,562,007.42 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>direct_iter</th>
+						
+						<td>6.57 &micro;s</td>
+						
+						<td>13.56 &micro;s</td>
+						
+						<td>17.00 &micro;s</td>
+						
+						<td>103.30 &micro;s</td>
+						
+						<td>979.82 &micro;s</td>
+						
+						<td>10,927.85 &micro;s</td>
+						
+						<td>49,079.93 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>iter_items</th>
+						
+						<td>7.87 &micro;s</td>
+						
+						<td>10.74 &micro;s</td>
+						
+						<td>17.39 &micro;s</td>
+						
+						<td>104.59 &micro;s</td>
+						
+						<td>989.80 &micro;s</td>
+						
+						<td>10,337.35 &micro;s</td>
+						
+						<td>52,068.20 &micro;s</td>
+						
+					</tr>
+					
+
+				</tbody>
+			</table>
+		
+	</div>
+	
+	<div class="test">
+		<h4><a name="GetMiddleValue">Get a value from the middle</a></h4>
+
+		Best of <b>5</b> runs, over dictionaries with <b>1 - 500,000</b> items.
+
+		<div class=methods>
+			
+			<div class=method>
+				<div class=name>use_list</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">use_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calling list on the dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">values</span><span class="p">())[</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>use_iter</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">use_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calling iter on the keys</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">islice</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>iter_2</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">iter_2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Count over the iter results</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span>
+    <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">left</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">value</span>
+        <span class="n">left</span> <span class="o">-=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>proposed(*)</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">proposed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Using keys indexing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">values</span><span class="p">()[</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+</pre></div>
+</div>
+			</div>
+			
+		</div>
+
+		<div class="graph loading" id="graph-GetMiddleValue"></div>
+
+		<h5>Best Times</h5>
+		
+			<table class=results>
+				<thead>
+					<tr>
+						<th rowspan=2>Method</th>
+						<th colspan=7>Dict Size</th>
+					</tr>
+					<tr>
+						
+						<th>1</th>
+						
+						<th>10</th>
+						
+						<th>100</th>
+						
+						<th>1,000</th>
+						
+						<th>10,000</th>
+						
+						<th>100,000</th>
+						
+						<th>500,000</th>
+						
+					</tr>
+				</thead>
+				<tbody>
+					
+					<tr>
+						<th>iter_2</th>
+						
+						<td>5.98 &micro;s</td>
+						
+						<td>9.46 &micro;s</td>
+						
+						<td>17.56 &micro;s</td>
+						
+						<td>96.63 &micro;s</td>
+						
+						<td>974.39 &micro;s</td>
+						
+						<td>10,096.37 &micro;s</td>
+						
+						<td>52,651.04 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>proposed</th>
+						
+						<td>6.98 &micro;s</td>
+						
+						<td>7.26 &micro;s</td>
+						
+						<td>7.59 &micro;s</td>
+						
+						<td>7.20 &micro;s</td>
+						
+						<td>18.43 &micro;s</td>
+						
+						<td>371.18 &micro;s</td>
+						
+						<td>1,266.70 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>use_iter</th>
+						
+						<td>13.39 &micro;s</td>
+						
+						<td>13.13 &micro;s</td>
+						
+						<td>15.31 &micro;s</td>
+						
+						<td>20.48 &micro;s</td>
+						
+						<td>121.24 &micro;s</td>
+						
+						<td>1,052.48 &micro;s</td>
+						
+						<td>5,163.83 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>use_list</th>
+						
+						<td>12.20 &micro;s</td>
+						
+						<td>9.24 &micro;s</td>
+						
+						<td>11.31 &micro;s</td>
+						
+						<td>33.63 &micro;s</td>
+						
+						<td>237.76 &micro;s</td>
+						
+						<td>2,275.04 &micro;s</td>
+						
+						<td>14,447.63 &micro;s</td>
+						
+					</tr>
+					
+
+				</tbody>
+			</table>
+		
+	</div>
+	
+	<div class="test">
+		<h4><a name="RandomSample">Retrieve random sample of items from dict</a></h4>
+
+		Best of <b>5</b> runs, over dictionaries with <b>1 - 500,000</b> items.
+
+		<div class=methods>
+			
+			<div class=method>
+				<div class=name>use_list</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">use_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_size</span><span class="p">)</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>proposed(*)</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">proposed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_size</span><span class="p">)</span>
+</pre></div>
+</div>
+			</div>
+			
+		</div>
+
+		<div class="graph loading" id="graph-RandomSample"></div>
+
+		<h5>Best Times</h5>
+		
+			<table class=results>
+				<thead>
+					<tr>
+						<th rowspan=2>Method</th>
+						<th colspan=7>Dict Size</th>
+					</tr>
+					<tr>
+						
+						<th>1</th>
+						
+						<th>10</th>
+						
+						<th>100</th>
+						
+						<th>1,000</th>
+						
+						<th>10,000</th>
+						
+						<th>100,000</th>
+						
+						<th>500,000</th>
+						
+					</tr>
+				</thead>
+				<tbody>
+					
+					<tr>
+						<th>proposed</th>
+						
+						<td>63.91 &micro;s</td>
+						
+						<td>91.76 &micro;s</td>
+						
+						<td>296.80 &micro;s</td>
+						
+						<td>2,276.65 &micro;s</td>
+						
+						<td>7,790.83 &micro;s</td>
+						
+						<td>35,813.24 &micro;s</td>
+						
+						<td>160,066.48 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>use_list</th>
+						
+						<td>46.61 &micro;s</td>
+						
+						<td>72.48 &micro;s</td>
+						
+						<td>258.28 &micro;s</td>
+						
+						<td>2,164.52 &micro;s</td>
+						
+						<td>7,558.31 &micro;s</td>
+						
+						<td>32,519.76 &micro;s</td>
+						
+						<td>151,574.83 &micro;s</td>
+						
+					</tr>
+					
+
+				</tbody>
+			</table>
+		
+	</div>
+	
+	<div class="test">
+		<h4><a name="RandomChoice">Retrieve random item from dict</a></h4>
+
+		Best of <b>5</b> runs, over dictionaries with <b>1 - 500,000</b> items.
+
+		<div class=methods>
+			
+			<div class=method>
+				<div class=name>use_list</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">use_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>proposed(*)</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">proposed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+</pre></div>
+</div>
+			</div>
+			
+		</div>
+
+		<div class="graph loading" id="graph-RandomChoice"></div>
+
+		<h5>Best Times</h5>
+		
+			<table class=results>
+				<thead>
+					<tr>
+						<th rowspan=2>Method</th>
+						<th colspan=7>Dict Size</th>
+					</tr>
+					<tr>
+						
+						<th>1</th>
+						
+						<th>10</th>
+						
+						<th>100</th>
+						
+						<th>1,000</th>
+						
+						<th>10,000</th>
+						
+						<th>100,000</th>
+						
+						<th>500,000</th>
+						
+					</tr>
+				</thead>
+				<tbody>
+					
+					<tr>
+						<th>use_list</th>
+						
+						<td>15.54 &micro;s</td>
+						
+						<td>24.13 &micro;s</td>
+						
+						<td>25.13 &micro;s</td>
+						
+						<td>134.50 &micro;s</td>
+						
+						<td>2,808.85 &micro;s</td>
+						
+						<td>28,782.44 &micro;s</td>
+						
+						<td>146,900.63 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>proposed</th>
+						
+						<td>14.61 &micro;s</td>
+						
+						<td>12.56 &micro;s</td>
+						
+						<td>15.26 &micro;s</td>
+						
+						<td>19.54 &micro;s</td>
+						
+						<td>29.61 &micro;s</td>
+						
+						<td>33.70 &micro;s</td>
+						
+						<td>626.48 &micro;s</td>
+						
+					</tr>
+					
+
+				</tbody>
+			</table>
+		
+	</div>
+	
+	<div class="test">
+		<h4><a name="RepeatedAccess">Access 100k items by index</a></h4>
+
+		Best of <b>5</b> runs, over dictionaries with <b>1 - 500,000</b> items.
+
+		<div class=methods>
+			
+			<div class=method>
+				<div class=name>use_list</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">use_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">:</span>
+        <span class="n">last</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">last</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>proposed(*)</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">proposed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">:</span>
+        <span class="n">last</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">last</span>
+</pre></div>
+</div>
+			</div>
+			
+		</div>
+
+		<div class="graph loading" id="graph-RepeatedAccess"></div>
+
+		<h5>Best Times</h5>
+		
+			<table class=results>
+				<thead>
+					<tr>
+						<th rowspan=2>Method</th>
+						<th colspan=7>Dict Size</th>
+					</tr>
+					<tr>
+						
+						<th>1</th>
+						
+						<th>10</th>
+						
+						<th>100</th>
+						
+						<th>1,000</th>
+						
+						<th>10,000</th>
+						
+						<th>100,000</th>
+						
+						<th>500,000</th>
+						
+					</tr>
+				</thead>
+				<tbody>
+					
+					<tr>
+						<th>use_list</th>
+						
+						<td>12,167.55 &micro;s</td>
+						
+						<td>12,509.94 &micro;s</td>
+						
+						<td>12,337.35 &micro;s</td>
+						
+						<td>13,766.24 &micro;s</td>
+						
+						<td>22,801.50 &micro;s</td>
+						
+						<td>62,553.13 &micro;s</td>
+						
+						<td>193,707.15 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>proposed</th>
+						
+						<td>23,829.02 &micro;s</td>
+						
+						<td>26,460.50 &micro;s</td>
+						
+						<td>35,223.33 &micro;s</td>
+						
+						<td>132,260.37 &micro;s</td>
+						
+						<td>1,062,860.33 &micro;s</td>
+						
+						<td>11,459,335.83 &micro;s</td>
+						
+						<td>66,932,503.87 &micro;s</td>
+						
+					</tr>
+					
+
+				</tbody>
+			</table>
+		
+	</div>
+	
+	<div class="test">
+		<h4><a name="GetLastKeyWithHoles">Get last key from a dict that has had entries removed (branch misses)</a></h4>
+
+		Best of <b>5</b> runs, over dictionaries with <b>1 - 500,000</b> items.
+
+		<div class=methods>
+			
+			<div class=method>
+				<div class=name>use_list</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">use_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>use_iter</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">use_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+</pre></div>
+</div>
+			</div>
+			
+			<div class=method>
+				<div class=name>proposed(*)</div>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+<span class="k">def</span> <span class="nf">proposed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+			</div>
+			
+		</div>
+
+		<div class="graph loading" id="graph-GetLastKeyWithHoles"></div>
+
+		<h5>Best Times</h5>
+		
+			<table class=results>
+				<thead>
+					<tr>
+						<th rowspan=2>Method</th>
+						<th colspan=7>Dict Size</th>
+					</tr>
+					<tr>
+						
+						<th>1</th>
+						
+						<th>10</th>
+						
+						<th>100</th>
+						
+						<th>1,000</th>
+						
+						<th>10,000</th>
+						
+						<th>100,000</th>
+						
+						<th>500,000</th>
+						
+					</tr>
+				</thead>
+				<tbody>
+					
+					<tr>
+						<th>proposed</th>
+						
+						<td>6.13 &micro;s</td>
+						
+						<td>6.44 &micro;s</td>
+						
+						<td>7.80 &micro;s</td>
+						
+						<td>9.35 &micro;s</td>
+						
+						<td>41.74 &micro;s</td>
+						
+						<td>694.11 &micro;s</td>
+						
+						<td>2,141.33 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>use_iter</th>
+						
+						<td>10.39 &micro;s</td>
+						
+						<td>12.57 &micro;s</td>
+						
+						<td>11.13 &micro;s</td>
+						
+						<td>8.11 &micro;s</td>
+						
+						<td>16.09 &micro;s</td>
+						
+						<td>28.57 &micro;s</td>
+						
+						<td>30.83 &micro;s</td>
+						
+					</tr>
+					
+					<tr>
+						<th>use_list</th>
+						
+						<td>10.67 &micro;s</td>
+						
+						<td>8.15 &micro;s</td>
+						
+						<td>9.39 &micro;s</td>
+						
+						<td>36.15 &micro;s</td>
+						
+						<td>298.94 &micro;s</td>
+						
+						<td>4,940.56 &micro;s</td>
+						
+						<td>25,989.85 &micro;s</td>
+						
+					</tr>
+					
+
+				</tbody>
+			</table>
+		
+	</div>
+	
+
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+<script>
+
+	const chart_data = [{"cls": "GetFirstItem", "series": [{"color": "#2ca02c", "dataPoints": [{"x": 100000, "y": 0.019833000003188772}, {"x": 100000, "y": 0.01974099996004952}, {"x": 100000, "y": 0.019202999737899518}, {"x": 100000, "y": 0.02146299993910361}, {"x": 100000, "y": 0.0198520001504221}, {"x": 100, "y": 0.007481000004361249}, {"x": 100, "y": 0.012649000382225495}, {"x": 100, "y": 0.01640700020288932}, {"x": 100, "y": 0.007204000212368555}, {"x": 100, "y": 0.007684999673074344}, {"x": 500000, "y": 0.02901800002064192}, {"x": 500000, "y": 0.031222000018260587}, {"x": 500000, "y": 0.031628999749955256}, {"x": 500000, "y": 0.03166700025758473}, {"x": 500000, "y": 0.02777800000330899}, {"x": 1000, "y": 0.00892599996404897}, {"x": 1000, "y": 0.007778000053804135}, {"x": 1000, "y": 0.01931500014507037}, {"x": 1000, "y": 0.009962999683921225}, {"x": 1000, "y": 0.006592999852728099}, {"x": 10, "y": 0.008425999965311348}, {"x": 10, "y": 0.013981000051899173}, {"x": 10, "y": 0.013407000096776756}, {"x": 10, "y": 0.01301899987993238}, {"x": 10, "y": 0.0063520001276629046}, {"x": 1, "y": 0.006795999979658518}, {"x": 1, "y": 0.013797000008253235}, {"x": 1, "y": 0.008463000085612293}, {"x": 1, "y": 0.006554999799845973}, {"x": 1, "y": 0.006815000233473256}, {"x": 10000, "y": 0.01025899996420776}, {"x": 10000, "y": 0.01211099970532814}, {"x": 10000, "y": 0.009943999884853838}, {"x": 10000, "y": 0.015092000012373319}, {"x": 10000, "y": 0.01201900022351765}], "name": "proposed(*).runs", "showInLegend": false, "type": "scatter"}, {"color": "#2ca02c", "dataPoints": [{"x": 1, "y": 0.006554999799845973}, {"x": 10, "y": 0.0063520001276629046}, {"x": 100, "y": 0.007204000212368555}, {"x": 1000, "y": 0.006592999852728099}, {"x": 10000, "y": 0.009943999884853838}, {"x": 100000, "y": 0.019202999737899518}, {"x": 500000, "y": 0.02777800000330899}], "name": "proposed(*)", "showInLegend": true, "type": "spline"}, {"color": "#ff7f0e", "dataPoints": [{"x": 1, "y": 0.019758999997065985}, {"x": 1, "y": 0.010574000043561682}, {"x": 1, "y": 0.015869999970163917}, {"x": 1, "y": 0.007685000127821695}, {"x": 1, "y": 0.018648999684955925}, {"x": 100, "y": 0.02748200000013412}, {"x": 100, "y": 0.03681499998720028}, {"x": 100, "y": 0.03805599999395781}, {"x": 100, "y": 0.02614799996081274}, {"x": 100, "y": 0.03461100004642503}, {"x": 10000, "y": 3.4866299999976036}, {"x": 10000, "y": 2.8502039999693807}, {"x": 10000, "y": 2.864148000071509}, {"x": 10000, "y": 2.9272030001266103}, {"x": 10000, "y": 2.8581850001501152}, {"x": 10, "y": 0.011481000001367647}, {"x": 10, "y": 0.010222000014437072}, {"x": 10, "y": 0.010574000043561682}, {"x": 10, "y": 0.009963000138668576}, {"x": 10, "y": 0.023907000013423385}, {"x": 500000, "y": 147.79181400001562}, {"x": 500000, "y": 149.75013000002946}, {"x": 500000, "y": 152.72485100013}, {"x": 500000, "y": 153.55488599971068}, {"x": 500000, "y": 157.04183100024238}, {"x": 1000, "y": 0.12538900000436115}, {"x": 1000, "y": 0.14525899996442604}, {"x": 1000, "y": 0.1303709996136604}, {"x": 1000, "y": 0.13457399973049178}, {"x": 1000, "y": 0.13420300001598662}, {"x": 100000, "y": 29.415037000035227}, {"x": 100000, "y": 28.888072999961878}, {"x": 100000, "y": 30.380555999954595}, {"x": 100000, "y": 31.44881499974872}, {"x": 100000, "y": 31.01146199969662}], "name": "use_list.runs", "showInLegend": false, "type": "scatter"}, {"color": "#ff7f0e", "dataPoints": [{"x": 1, "y": 0.007685000127821695}, {"x": 10, "y": 0.009963000138668576}, {"x": 100, "y": 0.02614799996081274}, {"x": 1000, "y": 0.12538900000436115}, {"x": 10000, "y": 2.8502039999693807}, {"x": 100000, "y": 28.888072999961878}, {"x": 500000, "y": 147.79181400001562}], "name": "use_list", "showInLegend": true, "type": "spline"}, {"color": "#d62728", "dataPoints": [{"x": 1000, "y": 0.007760000002576817}, {"x": 1000, "y": 0.013351999996302766}, {"x": 1000, "y": 0.009776999831956346}, {"x": 1000, "y": 0.014055000065127388}, {"x": 1000, "y": 0.013704000139114214}, {"x": 1, "y": 0.008906999994451326}, {"x": 1, "y": 0.010130000077879231}, {"x": 1, "y": 0.005870999984836089}, {"x": 1, "y": 0.008037000043259468}, {"x": 1, "y": 0.011147999884997262}, {"x": 500000, "y": 0.03261199998405573}, {"x": 500000, "y": 0.031852000006438175}, {"x": 500000, "y": 0.03125899991118786}, {"x": 500000, "y": 0.03338900023663882}, {"x": 500000, "y": 0.0317970002470247}, {"x": 10000, "y": 0.016351999988728494}, {"x": 10000, "y": 0.019147999864799203}, {"x": 10000, "y": 0.020685999970737612}, {"x": 10000, "y": 0.016962999779934762}, {"x": 10000, "y": 0.017130000287579605}, {"x": 100000, "y": 0.024408000058429025}, {"x": 100000, "y": 0.022982000018600957}, {"x": 100000, "y": 0.022723000029145624}, {"x": 100000, "y": 0.02348099997107056}, {"x": 100000, "y": 0.022666999939247034}, {"x": 100, "y": 0.010666999969544122}, {"x": 100, "y": 0.014111000155025977}, {"x": 100, "y": 0.007147999895096291}, {"x": 100, "y": 0.008167000032699434}, {"x": 100, "y": 0.00781499966251431}, {"x": 10, "y": 0.01140700010182627}, {"x": 10, "y": 0.007371000037892372}, {"x": 10, "y": 0.008370999921680777}, {"x": 10, "y": 0.010185000064666383}, {"x": 10, "y": 0.007519000064348802}], "name": "use_iter.runs", "showInLegend": false, "type": "scatter"}, {"color": "#d62728", "dataPoints": [{"x": 1, "y": 0.005870999984836089}, {"x": 10, "y": 0.007371000037892372}, {"x": 100, "y": 0.007147999895096291}, {"x": 1000, "y": 0.007760000002576817}, {"x": 10000, "y": 0.016351999988728494}, {"x": 100000, "y": 0.022666999939247034}, {"x": 500000, "y": 0.03125899991118786}], "name": "use_iter", "showInLegend": true, "type": "spline"}]}, {"cls": "GetFirstKey", "series": [{"color": "#1f77b4", "dataPoints": [{"x": 500000, "y": 0.03187100000445753}, {"x": 500000, "y": 0.030019000007541763}, {"x": 500000, "y": 0.032389000011789904}, {"x": 500000, "y": 0.031148999823926715}, {"x": 500000, "y": 0.033277000056841644}, {"x": 1, "y": 0.007555000003378609}, {"x": 1, "y": 0.011776999997437088}, {"x": 1, "y": 0.007185000015397236}, {"x": 1, "y": 0.01790799996115311}, {"x": 1, "y": 0.007296000148926396}, {"x": 1000, "y": 0.008592000000362532}, {"x": 1000, "y": 0.013055000181338983}, {"x": 1000, "y": 0.010055000075226417}, {"x": 1000, "y": 0.009222000244335504}, {"x": 1000, "y": 0.009297000360675156}, {"x": 100000, "y": 0.023462999990897515}, {"x": 100000, "y": 0.024074000066320878}, {"x": 100000, "y": 0.021592000166492653}, {"x": 100000, "y": 0.019907000023522414}, {"x": 100000, "y": 0.02386999994996586}, {"x": 100, "y": 0.017333000016606093}, {"x": 100, "y": 0.015166999901339295}, {"x": 100, "y": 0.01392600006511202}, {"x": 100, "y": 0.007277999884536257}, {"x": 100, "y": 0.01077799970516935}, {"x": 10, "y": 0.0064450000536453445}, {"x": 10, "y": 0.018574000023363624}, {"x": 10, "y": 0.01668499999141204}, {"x": 10, "y": 0.014686000213259831}, {"x": 10, "y": 0.009222999779012753}, {"x": 10000, "y": 0.01790700002857193}, {"x": 10000, "y": 0.016481999864481622}, {"x": 10000, "y": 0.010037000265583629}, {"x": 10000, "y": 0.010260000181006035}, {"x": 10000, "y": 0.010740000107034575}], "name": "use_iter.runs", "showInLegend": false, "type": "scatter"}, {"color": "#1f77b4", "dataPoints": [{"x": 1, "y": 0.007185000015397236}, {"x": 10, "y": 0.0064450000536453445}, {"x": 100, "y": 0.007277999884536257}, {"x": 1000, "y": 0.008592000000362532}, {"x": 10000, "y": 0.010037000265583629}, {"x": 100000, "y": 0.019907000023522414}, {"x": 500000, "y": 0.030019000007541763}], "name": "use_iter", "showInLegend": true, "type": "spline"}, {"color": "#2ca02c", "dataPoints": [{"x": 10000, "y": 0.010926000001632019}, {"x": 10000, "y": 0.015408000024308421}, {"x": 10000, "y": 0.011704000030476891}, {"x": 10000, "y": 0.00901899989003141}, {"x": 10000, "y": 0.010296000255038962}, {"x": 1, "y": 0.009943999998540676}, {"x": 1, "y": 0.016740999853936955}, {"x": 1, "y": 0.00677800017001573}, {"x": 1, "y": 0.013760000001639128}, {"x": 1, "y": 0.0057399997785978485}, {"x": 500000, "y": 0.028055000001359076}, {"x": 500000, "y": 0.029981999887240818}, {"x": 500000, "y": 0.03033399980267859}, {"x": 500000, "y": 0.027333000161888776}, {"x": 500000, "y": 0.02909299973907764}, {"x": 100, "y": 0.010499999973490048}, {"x": 100, "y": 0.0074440001753828255}, {"x": 100, "y": 0.008241000159614487}, {"x": 100, "y": 0.013389000287133968}, {"x": 100, "y": 0.011963000360992737}, {"x": 100000, "y": 0.02038900004208699}, {"x": 100000, "y": 0.0181479999810108}, {"x": 100000, "y": 0.021315000140020857}, {"x": 100000, "y": 0.022462999822892016}, {"x": 100000, "y": 0.020166000012977747}, {"x": 1000, "y": 0.010760000122900237}, {"x": 1000, "y": 0.012350999895716086}, {"x": 1000, "y": 0.011389000064809807}, {"x": 1000, "y": 0.016647999927954515}, {"x": 1000, "y": 0.01174099998024758}, {"x": 10, "y": 0.009036999927047873}, {"x": 10, "y": 0.006795999979658518}, {"x": 10, "y": 0.008760000127949752}, {"x": 10, "y": 0.015519000044150744}, {"x": 10, "y": 0.013703999684366863}], "name": "proposed(*).runs", "showInLegend": false, "type": "scatter"}, {"color": "#2ca02c", "dataPoints": [{"x": 1, "y": 0.0057399997785978485}, {"x": 10, "y": 0.006795999979658518}, {"x": 100, "y": 0.0074440001753828255}, {"x": 1000, "y": 0.010760000122900237}, {"x": 10000, "y": 0.00901899989003141}, {"x": 100000, "y": 0.0181479999810108}, {"x": 500000, "y": 0.027333000161888776}], "name": "proposed(*)", "showInLegend": true, "type": "spline"}, {"color": "#d62728", "dataPoints": [{"x": 10000, "y": 0.2514999999974066}, {"x": 10000, "y": 0.26538899999906107}, {"x": 10000, "y": 0.2688519999765049}, {"x": 10000, "y": 0.263184999994337}, {"x": 10000, "y": 0.26757399973575957}, {"x": 100, "y": 0.013056000000233325}, {"x": 100, "y": 0.022815000022546883}, {"x": 100, "y": 0.017537000076117693}, {"x": 100, "y": 0.015999999959603883}, {"x": 100, "y": 0.011110999821539735}, {"x": 10, "y": 0.008369999996205024}, {"x": 10, "y": 0.007351999997240455}, {"x": 10, "y": 0.01077799970516935}, {"x": 10, "y": 0.008092999905784382}, {"x": 10, "y": 0.010814999768626876}, {"x": 1, "y": 0.013944999977866246}, {"x": 1, "y": 0.00820400009615696}, {"x": 1, "y": 0.007889000244176714}, {"x": 1, "y": 0.02116699988619075}, {"x": 1, "y": 0.01927799985423917}, {"x": 1000, "y": 0.045666999994864454}, {"x": 1000, "y": 0.036593000004359055}, {"x": 1000, "y": 0.032111000109580345}, {"x": 1000, "y": 0.03875899983540876}, {"x": 1000, "y": 0.035556000057113124}, {"x": 500000, "y": 28.502407000019048}, {"x": 500000, "y": 28.604426000129024}, {"x": 500000, "y": 29.206204000047364}, {"x": 500000, "y": 29.705518999890046}, {"x": 500000, "y": 30.40372199984631}, {"x": 100000, "y": 4.668407000053776}, {"x": 100000, "y": 4.411295999943832}, {"x": 100000, "y": 4.907926000214502}, {"x": 100000, "y": 4.7865369997452945}, {"x": 100000, "y": 4.946961999849009}], "name": "use_list.runs", "showInLegend": false, "type": "scatter"}, {"color": "#d62728", "dataPoints": [{"x": 1, "y": 0.007889000244176714}, {"x": 10, "y": 0.007351999997240455}, {"x": 100, "y": 0.011110999821539735}, {"x": 1000, "y": 0.032111000109580345}, {"x": 10000, "y": 0.2514999999974066}, {"x": 100000, "y": 4.411295999943832}, {"x": 500000, "y": 28.502407000019048}], "name": "use_list", "showInLegend": true, "type": "spline"}]}, {"cls": "GetLastKey", "series": [{"color": "#1f77b4", "dataPoints": [{"x": 1000, "y": 0.013351999996302766}, {"x": 1000, "y": 0.016481999864481622}, {"x": 1000, "y": 0.011166999684064649}, {"x": 1000, "y": 0.014741000086360145}, {"x": 1000, "y": 0.011759000244637718}, {"x": 10000, "y": 0.021426000003543777}, {"x": 10000, "y": 0.01731499992274621}, {"x": 10000, "y": 0.01988899998650595}, {"x": 10000, "y": 0.01346299995930167}, {"x": 10000, "y": 0.01422199966327753}, {"x": 1, "y": 0.00812900000113359}, {"x": 1, "y": 0.013704000025427376}, {"x": 1, "y": 0.01766599962138571}, {"x": 1, "y": 0.010204000318481121}, {"x": 1, "y": 0.01594500008650357}, {"x": 500000, "y": 0.036443999988478026}, {"x": 500000, "y": 0.040407000142295146}, {"x": 500000, "y": 0.03696300018418697}, {"x": 500000, "y": 0.037258999782352475}, {"x": 500000, "y": 0.038796999888290884}, {"x": 10, "y": 0.012647999994896963}, {"x": 10, "y": 0.017852000155471615}, {"x": 10, "y": 0.011333000202284893}, {"x": 10, "y": 0.010704000033001648}, {"x": 10, "y": 0.01842599976953352}, {"x": 100000, "y": 0.02692599991860334}, {"x": 100000, "y": 0.027054999918618705}, {"x": 100000, "y": 0.02596299964352511}, {"x": 100000, "y": 0.02692599991860334}, {"x": 100000, "y": 0.02653699993970804}, {"x": 100, "y": 0.022037000007912866}, {"x": 100, "y": 0.020685000208686688}, {"x": 100, "y": 0.0169810000443249}, {"x": 100, "y": 0.0148889998854429}, {"x": 100, "y": 0.017111000033764867}], "name": "use_iter.runs", "showInLegend": false, "type": "scatter"}, {"color": "#1f77b4", "dataPoints": [{"x": 1, "y": 0.00812900000113359}, {"x": 10, "y": 0.010704000033001648}, {"x": 100, "y": 0.0148889998854429}, {"x": 1000, "y": 0.011166999684064649}, {"x": 10000, "y": 0.01346299995930167}, {"x": 100000, "y": 0.02596299964352511}, {"x": 500000, "y": 0.036443999988478026}], "name": "use_iter", "showInLegend": true, "type": "spline"}, {"color": "#2ca02c", "dataPoints": [{"x": 10, "y": 0.01666700000413357}, {"x": 10, "y": 0.013128999995615231}, {"x": 10, "y": 0.00629700025456259}, {"x": 10, "y": 0.014277999980549794}, {"x": 10, "y": 0.014963000012357952}, {"x": 500000, "y": 2.077425999971183}, {"x": 500000, "y": 2.119037000284152}, {"x": 500000, "y": 2.075425999919389}, {"x": 500000, "y": 2.130591999957687}, {"x": 500000, "y": 2.0513519998530683}, {"x": 100000, "y": 0.5934999999794854}, {"x": 100000, "y": 0.6375560000151381}, {"x": 100000, "y": 0.6025550000003932}, {"x": 100000, "y": 0.7085559998358804}, {"x": 100000, "y": 0.6925740001406666}, {"x": 10000, "y": 0.040388999991591845}, {"x": 10000, "y": 0.038259000007201394}, {"x": 10000, "y": 0.027962000103798346}, {"x": 10000, "y": 0.02966700003526057}, {"x": 10000, "y": 0.032408000151917804}, {"x": 100, "y": 0.006425999970360863}, {"x": 100, "y": 0.01146300019172486}, {"x": 100, "y": 0.008258999969257275}, {"x": 100, "y": 0.014554999779647915}, {"x": 100, "y": 0.007795999863446923}, {"x": 1000, "y": 0.010943999996015918}, {"x": 1000, "y": 0.019073999965257826}, {"x": 1000, "y": 0.010426000244478928}, {"x": 1000, "y": 0.015093000001797918}, {"x": 1000, "y": 0.013332999969861703}, {"x": 1, "y": 0.005518000023130298}, {"x": 1, "y": 0.00936999998657484}, {"x": 1, "y": 0.006333999863272766}, {"x": 1, "y": 0.014907000149833038}, {"x": 1, "y": 0.017778000255930237}], "name": "proposed(*).runs", "showInLegend": false, "type": "scatter"}, {"color": "#2ca02c", "dataPoints": [{"x": 1, "y": 0.005518000023130298}, {"x": 10, "y": 0.00629700025456259}, {"x": 100, "y": 0.006425999970360863}, {"x": 1000, "y": 0.010426000244478928}, {"x": 10000, "y": 0.027962000103798346}, {"x": 100000, "y": 0.5934999999794854}, {"x": 500000, "y": 2.0513519998530683}], "name": "proposed(*)", "showInLegend": true, "type": "spline"}, {"color": "#d62728", "dataPoints": [{"x": 1, "y": 0.007740000000922009}, {"x": 1, "y": 0.013519000049200258}, {"x": 1, "y": 0.007833999916329049}, {"x": 1, "y": 0.012276999768801033}, {"x": 1, "y": 0.01900000006571645}, {"x": 500000, "y": 27.958980999983396}, {"x": 500000, "y": 28.792944999963765}, {"x": 500000, "y": 28.156925999837767}, {"x": 500000, "y": 29.651813999862497}, {"x": 500000, "y": 30.997184999705496}, {"x": 1000, "y": 0.032536999981402914}, {"x": 1000, "y": 0.036352000051920186}, {"x": 1000, "y": 0.0383880001209036}, {"x": 1000, "y": 0.034463000019968604}, {"x": 1000, "y": 0.047147999794106}, {"x": 100, "y": 0.009110999997119507}, {"x": 100, "y": 0.010315000054106349}, {"x": 100, "y": 0.012443999821698526}, {"x": 100, "y": 0.014574000033462653}, {"x": 100, "y": 0.02700000004551839}, {"x": 100000, "y": 4.440889000079551}, {"x": 100000, "y": 4.857814999922994}, {"x": 100000, "y": 4.760593000355584}, {"x": 100000, "y": 5.033629000081419}, {"x": 100000, "y": 5.128333000357088}, {"x": 10, "y": 0.007425999910992687}, {"x": 10, "y": 0.007888999789429363}, {"x": 10, "y": 0.00772299972595647}, {"x": 10, "y": 0.012240999694768107}, {"x": 10, "y": 0.01125899962062249}, {"x": 10000, "y": 0.27650000038192957}, {"x": 10000, "y": 0.27094500001112465}, {"x": 10000, "y": 0.2715919999900507}, {"x": 10000, "y": 0.2703149998524168}, {"x": 10000, "y": 0.27844400028698146}], "name": "use_list.runs", "showInLegend": false, "type": "scatter"}, {"color": "#d62728", "dataPoints": [{"x": 1, "y": 0.007740000000922009}, {"x": 10, "y": 0.007425999910992687}, {"x": 100, "y": 0.009110999997119507}, {"x": 1000, "y": 0.032536999981402914}, {"x": 10000, "y": 0.2703149998524168}, {"x": 100000, "y": 4.440889000079551}, {"x": 500000, "y": 27.958980999983396}], "name": "use_list", "showInLegend": true, "type": "spline"}]}, {"cls": "IterItems", "series": [{"color": "#1f77b4", "dataPoints": [{"x": 500000, "y": 240.07246000000038}, {"x": 500000, "y": 226.6686290000166}, {"x": 500000, "y": 224.31855400009226}, {"x": 500000, "y": 229.2587199999616}, {"x": 500000, "y": 232.9235739998694}, {"x": 10000, "y": 4.044684999996662}, {"x": 10000, "y": 4.785796000021492}, {"x": 10000, "y": 4.631203000371897}, {"x": 10000, "y": 4.463332999876002}, {"x": 10000, "y": 4.459537000002456}, {"x": 100, "y": 0.03774099991460389}, {"x": 100, "y": 0.05455600012282957}, {"x": 100, "y": 0.044129999878350645}, {"x": 100, "y": 0.0413329998991685}, {"x": 100, "y": 0.05259299996396294}, {"x": 100000, "y": 44.513055999914286}, {"x": 100000, "y": 46.820647999993525}, {"x": 100000, "y": 45.73548100006519}, {"x": 100000, "y": 45.63636999955634}, {"x": 100000, "y": 46.59911099997771}, {"x": 1, "y": 0.01064799994310306}, {"x": 1, "y": 0.010924999969574856}, {"x": 1, "y": 0.009944000339601189}, {"x": 1, "y": 0.009295999916503206}, {"x": 1, "y": 0.01222199989570072}, {"x": 10, "y": 0.020388999928400153}, {"x": 10, "y": 0.01842500023485627}, {"x": 10, "y": 0.02359200016144314}, {"x": 10, "y": 0.030222000077628763}, {"x": 10, "y": 0.022982000245974632}, {"x": 1000, "y": 0.2657039999576227}, {"x": 1000, "y": 0.26075899995703367}, {"x": 1000, "y": 0.25951800034818007}, {"x": 1000, "y": 0.2577219997874636}, {"x": 1000, "y": 0.26055499984067865}], "name": "list_index.runs", "showInLegend": false, "type": "scatter"}, {"color": "#1f77b4", "dataPoints": [{"x": 1, "y": 0.009295999916503206}, {"x": 10, "y": 0.01842500023485627}, {"x": 100, "y": 0.03774099991460389}, {"x": 1000, "y": 0.2577219997874636}, {"x": 10000, "y": 4.044684999996662}, {"x": 100000, "y": 44.513055999914286}, {"x": 500000, "y": 224.31855400009226}], "name": "list_index", "showInLegend": true, "type": "spline"}, {"color": "#ff7f0e", "dataPoints": [{"x": 1000, "y": 0.17224100000134968}, {"x": 1000, "y": 0.21377699999902688}, {"x": 1000, "y": 0.16846299968165113}, {"x": 1000, "y": 0.17148100005215383}, {"x": 1000, "y": 0.17048199970304267}, {"x": 100, "y": 0.04190699999639946}, {"x": 100, "y": 0.03251799995496185}, {"x": 100, "y": 0.02987000016219099}, {"x": 100, "y": 0.030778000109421555}, {"x": 100, "y": 0.06123999992269091}, {"x": 100000, "y": 32.41246299995737}, {"x": 100000, "y": 33.258222000029036}, {"x": 100000, "y": 34.41168399990602}, {"x": 100000, "y": 36.203092000050674}, {"x": 100000, "y": 37.45061200015698}, {"x": 10, "y": 0.018296000007467228}, {"x": 10, "y": 0.023019000082058483}, {"x": 10, "y": 0.02279700038343435}, {"x": 10, "y": 0.010666999969544122}, {"x": 10, "y": 0.02138899981218856}, {"x": 1, "y": 0.010777999932543025}, {"x": 1, "y": 0.012036999578413088}, {"x": 1, "y": 0.008703999810677487}, {"x": 1, "y": 0.014536999970005127}, {"x": 1, "y": 0.0107780001599167}, {"x": 10000, "y": 3.9198330000544956}, {"x": 10000, "y": 4.2922590000671335}, {"x": 10000, "y": 3.646444999958476}, {"x": 10000, "y": 4.092426000170235}, {"x": 10000, "y": 3.154074000121909}, {"x": 500000, "y": 174.5509980000861}, {"x": 500000, "y": 177.08484900003896}, {"x": 500000, "y": 179.15575799997896}, {"x": 500000, "y": 188.32355499989717}, {"x": 500000, "y": 179.82996299997467}], "name": "list_iter.runs", "showInLegend": false, "type": "scatter"}, {"color": "#ff7f0e", "dataPoints": [{"x": 1, "y": 0.008703999810677487}, {"x": 10, "y": 0.010666999969544122}, {"x": 100, "y": 0.02987000016219099}, {"x": 1000, "y": 0.16846299968165113}, {"x": 10000, "y": 3.154074000121909}, {"x": 100000, "y": 32.41246299995737}, {"x": 500000, "y": 174.5509980000861}], "name": "list_iter", "showInLegend": true, "type": "spline"}, {"color": "#2ca02c", "dataPoints": [{"x": 10, "y": 0.01257400000298503}, {"x": 10, "y": 0.012852000054408563}, {"x": 10, "y": 0.01550000001770968}, {"x": 10, "y": 0.01966700028788182}, {"x": 10, "y": 0.013091999790049158}, {"x": 1, "y": 0.009980999998049356}, {"x": 1, "y": 0.010426000017105252}, {"x": 1, "y": 0.023221999981615227}, {"x": 1, "y": 0.015573999917251058}, {"x": 1, "y": 0.013056000170763582}, {"x": 10000, "y": 106.21233099999472}, {"x": 10000, "y": 106.3410549999162}, {"x": 10000, "y": 106.0414060000312}, {"x": 10000, "y": 106.19768500009741}, {"x": 10000, "y": 106.17677700020067}, {"x": 100000, "y": 11571.170568000014}, {"x": 100000, "y": 11223.15831900005}, {"x": 100000, "y": 11500.067710000167}, {"x": 100000, "y": 11335.072330000003}, {"x": 100000, "y": 11341.748499999994}, {"x": 500000, "y": 332025.512669}, {"x": 500000, "y": 331935.7586389999}, {"x": 500000, "y": 327562.00741999986}, {"x": 500000, "y": 329465.7665080003}, {"x": 500000, "y": 328484.4425329998}, {"x": 1000, "y": 1.385555999945609}, {"x": 1000, "y": 1.360426000019288}, {"x": 1000, "y": 1.3443699999697856}, {"x": 1000, "y": 1.3229260002844967}, {"x": 1000, "y": 1.343481999811047}, {"x": 100, "y": 0.048036999942269176}, {"x": 100, "y": 0.04535199991551053}, {"x": 100, "y": 0.0741300000299816}, {"x": 100, "y": 0.05046300020694616}, {"x": 100, "y": 0.050555000143504}], "name": "items_index(*).runs", "showInLegend": false, "type": "scatter"}, {"color": "#2ca02c", "dataPoints": [{"x": 1, "y": 0.009980999998049356}, {"x": 10, "y": 0.01257400000298503}, {"x": 100, "y": 0.04535199991551053}, {"x": 1000, "y": 1.3229260002844967}, {"x": 10000, "y": 106.0414060000312}, {"x": 100000, "y": 11223.15831900005}, {"x": 500000, "y": 327562.00741999986}], "name": "items_index(*)", "showInLegend": true, "type": "spline"}, {"color": "#9467bd", "dataPoints": [{"x": 500000, "y": 49.07992500000091}, {"x": 500000, "y": 51.323498999977346}, {"x": 500000, "y": 52.862853999954496}, {"x": 500000, "y": 55.13151800005289}, {"x": 500000, "y": 55.518296000172995}, {"x": 100, "y": 0.024740999997163726}, {"x": 100, "y": 0.018073999854095746}, {"x": 100, "y": 0.01699999984339229}, {"x": 100, "y": 0.02662899987626588}, {"x": 100, "y": 0.027721999686036725}, {"x": 10, "y": 0.017019000040363608}, {"x": 10, "y": 0.015759000007165014}, {"x": 10, "y": 0.013555999998970947}, {"x": 10, "y": 0.018944999737868784}, {"x": 10, "y": 0.013870000202587107}, {"x": 1000, "y": 0.10329600002023653}, {"x": 1000, "y": 0.11107399996035383}, {"x": 1000, "y": 0.1057780000337516}, {"x": 1000, "y": 0.10946300017167232}, {"x": 1000, "y": 0.10596300035103923}, {"x": 10000, "y": 0.979815000164308}, {"x": 10000, "y": 0.9907409998959338}, {"x": 10000, "y": 0.9878149999167363}, {"x": 10000, "y": 0.9928330000548158}, {"x": 10000, "y": 0.9963150000658061}, {"x": 1, "y": 0.009184999953504303}, {"x": 1, "y": 0.006574000053660711}, {"x": 1, "y": 0.007778000053804135}, {"x": 1, "y": 0.014778000149817672}, {"x": 1, "y": 0.007222000022011343}, {"x": 100000, "y": 10.927852000349958}, {"x": 100000, "y": 10.957480999877589}, {"x": 100000, "y": 11.020480999832216}, {"x": 100000, "y": 11.072425999827828}, {"x": 100000, "y": 11.193574000117223}], "name": "direct_iter.runs", "showInLegend": false, "type": "scatter"}, {"color": "#9467bd", "dataPoints": [{"x": 1, "y": 0.006574000053660711}, {"x": 10, "y": 0.013555999998970947}, {"x": 100, "y": 0.01699999984339229}, {"x": 1000, "y": 0.10329600002023653}, {"x": 10000, "y": 0.979815000164308}, {"x": 100000, "y": 10.927852000349958}, {"x": 500000, "y": 49.07992500000091}], "name": "direct_iter", "showInLegend": true, "type": "spline"}, {"color": "#8c564b", "dataPoints": [{"x": 100000, "y": 10.363222000002281}, {"x": 100000, "y": 10.337352000021838}, {"x": 100000, "y": 10.894110999970508}, {"x": 100000, "y": 11.101555000095686}, {"x": 100000, "y": 11.12681499989776}, {"x": 1000, "y": 0.10459299999610039}, {"x": 1000, "y": 0.10575999999673513}, {"x": 1000, "y": 0.10707399997045286}, {"x": 1000, "y": 0.11099999983343878}, {"x": 1000, "y": 0.10701800010792795}, {"x": 1, "y": 0.009869999985312461}, {"x": 1, "y": 0.008018000016818405}, {"x": 1, "y": 0.010666999969544122}, {"x": 1, "y": 0.010277999990648823}, {"x": 1, "y": 0.007869999990361976}, {"x": 500000, "y": 52.06820400002243}, {"x": 500000, "y": 53.69018399983361}, {"x": 500000, "y": 53.74122099988199}, {"x": 500000, "y": 55.04146300017965}, {"x": 500000, "y": 55.04881499973635}, {"x": 10, "y": 0.01642600000195671}, {"x": 10, "y": 0.018277999970450765}, {"x": 10, "y": 0.011815000107162632}, {"x": 10, "y": 0.010740000107034575}, {"x": 10, "y": 0.0181479999810108}, {"x": 100, "y": 0.017722999928082572}, {"x": 100, "y": 0.02386999994996586}, {"x": 100, "y": 0.01738900027703494}, {"x": 100, "y": 0.018740000086836517}, {"x": 100, "y": 0.01955600009750924}, {"x": 10000, "y": 0.9975930001928646}, {"x": 10000, "y": 1.0098520001520228}, {"x": 10000, "y": 1.0005919998548052}, {"x": 10000, "y": 1.0133149999091984}, {"x": 10000, "y": 0.9897959998852457}], "name": "iter_items.runs", "showInLegend": false, "type": "scatter"}, {"color": "#8c564b", "dataPoints": [{"x": 1, "y": 0.007869999990361976}, {"x": 10, "y": 0.010740000107034575}, {"x": 100, "y": 0.01738900027703494}, {"x": 1000, "y": 0.10459299999610039}, {"x": 10000, "y": 0.9897959998852457}, {"x": 100000, "y": 10.337352000021838}, {"x": 500000, "y": 52.06820400002243}], "name": "iter_items", "showInLegend": true, "type": "spline"}]}, {"cls": "GetLastKeyWithHoles", "series": [{"color": "#2ca02c", "dataPoints": [{"x": 10, "y": 0.011222000004806887}, {"x": 10, "y": 0.007592000002887289}, {"x": 10, "y": 0.007371000265266048}, {"x": 10, "y": 0.008518999948137207}, {"x": 10, "y": 0.006444000064220745}, {"x": 10000, "y": 0.042167000003701105}, {"x": 10000, "y": 0.04423999985192495}, {"x": 10000, "y": 0.042722000216599554}, {"x": 10000, "y": 0.04285200020603952}, {"x": 10000, "y": 0.041741000131878536}, {"x": 500000, "y": 2.2169069999975477}, {"x": 500000, "y": 2.1463890000177344}, {"x": 500000, "y": 2.156111000203964}, {"x": 500000, "y": 2.1413330000541464}, {"x": 500000, "y": 2.1702589997403265}, {"x": 100, "y": 0.01494399998591689}, {"x": 100, "y": 0.008203000106732361}, {"x": 100, "y": 0.015296000128728338}, {"x": 100, "y": 0.00838899995869724}, {"x": 100, "y": 0.007795999863446923}, {"x": 1000, "y": 0.018037000018011895}, {"x": 1000, "y": 0.009351000016977196}, {"x": 1000, "y": 0.010352000117563875}, {"x": 1000, "y": 0.009815000339585822}, {"x": 1000, "y": 0.01125900007536984}, {"x": 1, "y": 0.006129999974291422}, {"x": 1, "y": 0.016055000060077873}, {"x": 1, "y": 0.00696300003255601}, {"x": 1, "y": 0.007277999884536257}, {"x": 1, "y": 0.007314999947993783}, {"x": 100000, "y": 0.7514999999784777}, {"x": 100000, "y": 0.7188340000539029}, {"x": 100000, "y": 0.7508889998462109}, {"x": 100000, "y": 0.745315000131086}, {"x": 100000, "y": 0.6941110000298067}], "name": "proposed(*).runs", "showInLegend": false, "type": "scatter"}, {"color": "#2ca02c", "dataPoints": [{"x": 1, "y": 0.006129999974291422}, {"x": 10, "y": 0.006444000064220745}, {"x": 100, "y": 0.007795999863446923}, {"x": 1000, "y": 0.009351000016977196}, {"x": 10000, "y": 0.041741000131878536}, {"x": 100000, "y": 0.6941110000298067}, {"x": 500000, "y": 2.1413330000541464}], "name": "proposed(*)", "showInLegend": true, "type": "spline"}, {"color": "#ff7f0e", "dataPoints": [{"x": 1, "y": 0.011166999996703453}, {"x": 1, "y": 0.01894399997581786}, {"x": 1, "y": 0.011519000054249773}, {"x": 1, "y": 0.01038899972627405}, {"x": 1, "y": 0.011055999948439421}, {"x": 1000, "y": 0.013500000022759195}, {"x": 1000, "y": 0.014647999989847449}, {"x": 1000, "y": 0.020000000006348273}, {"x": 1000, "y": 0.010500000144020305}, {"x": 1000, "y": 0.00811200015959912}, {"x": 500000, "y": 0.031110999998418265}, {"x": 500000, "y": 0.03270399997745699}, {"x": 500000, "y": 0.03083299998252187}, {"x": 500000, "y": 0.0330369998664537}, {"x": 500000, "y": 0.033056000120268436}, {"x": 10, "y": 0.012573999981668749}, {"x": 10, "y": 0.016703999961009686}, {"x": 10, "y": 0.016776999927969882}, {"x": 10, "y": 0.013871000192011707}, {"x": 10, "y": 0.020055999812029768}, {"x": 100, "y": 0.011128999972243037}, {"x": 100, "y": 0.013277999983074551}, {"x": 100, "y": 0.021129000003838883}, {"x": 100, "y": 0.0128330000279675}, {"x": 100, "y": 0.03681399994093226}, {"x": 100000, "y": 0.03213000002233457}, {"x": 100000, "y": 0.032185999771172646}, {"x": 100000, "y": 0.029926000024715904}, {"x": 100000, "y": 0.028574000225489726}, {"x": 100000, "y": 0.03273999982411624}, {"x": 10000, "y": 0.016091999896161724}, {"x": 10000, "y": 0.024296999981743284}, {"x": 10000, "y": 0.021351999748731032}, {"x": 10000, "y": 0.021258999822748592}, {"x": 10000, "y": 0.022093000097811455}], "name": "use_iter.runs", "showInLegend": false, "type": "scatter"}, {"color": "#ff7f0e", "dataPoints": [{"x": 1, "y": 0.01038899972627405}, {"x": 10, "y": 0.012573999981668749}, {"x": 100, "y": 0.011128999972243037}, {"x": 1000, "y": 0.00811200015959912}, {"x": 10000, "y": 0.016091999896161724}, {"x": 100000, "y": 0.028574000225489726}, {"x": 500000, "y": 0.03083299998252187}], "name": "use_iter", "showInLegend": true, "type": "spline"}, {"color": "#d62728", "dataPoints": [{"x": 500000, "y": 25.989852000002145}, {"x": 500000, "y": 31.089980999922773}, {"x": 500000, "y": 31.472017999931268}, {"x": 500000, "y": 31.94949999988239}, {"x": 500000, "y": 32.088036999994074}, {"x": 1000, "y": 0.039703999995310824}, {"x": 1000, "y": 0.041722999981175235}, {"x": 1000, "y": 0.03972199999680015}, {"x": 1000, "y": 0.036148999924989766}, {"x": 1000, "y": 0.036981999983254354}, {"x": 1, "y": 0.01298199998700511}, {"x": 1, "y": 0.010887999962960748}, {"x": 1, "y": 0.013202999980421737}, {"x": 1, "y": 0.01526000005469541}, {"x": 1, "y": 0.010665999980119523}, {"x": 100, "y": 0.009389000013015902}, {"x": 100, "y": 0.026222000087727793}, {"x": 100, "y": 0.019314999917696696}, {"x": 100, "y": 0.01298099959967658}, {"x": 100, "y": 0.011574000382097438}, {"x": 10000, "y": 0.29894499994043144}, {"x": 10000, "y": 0.3116299999419425}, {"x": 10000, "y": 0.3035739996448683}, {"x": 10000, "y": 0.30470399997284403}, {"x": 10000, "y": 0.3087599998252699}, {"x": 10, "y": 0.012056000059601502}, {"x": 10, "y": 0.01087100008589914}, {"x": 10, "y": 0.015536999853793532}, {"x": 10, "y": 0.008147999778884696}, {"x": 10, "y": 0.014814999758527847}, {"x": 100000, "y": 4.940556000065044}, {"x": 100000, "y": 5.352795999897353}, {"x": 100000, "y": 5.368593000184774}, {"x": 100000, "y": 5.97296300020389}, {"x": 100000, "y": 5.647500000122818}], "name": "use_list.runs", "showInLegend": false, "type": "scatter"}, {"color": "#d62728", "dataPoints": [{"x": 1, "y": 0.010665999980119523}, {"x": 10, "y": 0.008147999778884696}, {"x": 100, "y": 0.009389000013015902}, {"x": 1000, "y": 0.036148999924989766}, {"x": 10000, "y": 0.29894499994043144}, {"x": 100000, "y": 4.940556000065044}, {"x": 500000, "y": 25.989852000002145}], "name": "use_list", "showInLegend": true, "type": "spline"}]}, {"cls": "IterKeys", "series": [{"color": "#1f77b4", "dataPoints": [{"x": 10, "y": 0.009500000004436515}, {"x": 10, "y": 0.007591999995781862}, {"x": 10, "y": 0.020556000002613928}, {"x": 10, "y": 0.008815000001050066}, {"x": 10, "y": 0.014203999853634741}, {"x": 1, "y": 0.005926000000044951}, {"x": 1, "y": 0.007536999987678428}, {"x": 1, "y": 0.00848199988467968}, {"x": 1, "y": 0.006945000222913222}, {"x": 1, "y": 0.012370000149530824}, {"x": 500000, "y": 26.108907000001125}, {"x": 500000, "y": 28.30457399994657}, {"x": 500000, "y": 31.278240000119695}, {"x": 500000, "y": 31.11300000000483}, {"x": 500000, "y": 31.183832999886363}, {"x": 1000, "y": 0.06177799997431066}, {"x": 1000, "y": 0.06924099989191745}, {"x": 1000, "y": 0.06424000002880348}, {"x": 1000, "y": 0.06014799964759732}, {"x": 1000, "y": 0.05938899994362146}, {"x": 100000, "y": 5.39949999995315}, {"x": 100000, "y": 5.588499999987562}, {"x": 100000, "y": 5.684722000069087}, {"x": 100000, "y": 6.0076849999859405}, {"x": 100000, "y": 6.134999999630963}, {"x": 10000, "y": 0.5289630000220313}, {"x": 10000, "y": 0.5192040000565612}, {"x": 10000, "y": 0.5316860001585155}, {"x": 10000, "y": 0.5453879998640332}, {"x": 10000, "y": 0.5630559999190154}, {"x": 100, "y": 0.013889000001654495}, {"x": 100, "y": 0.011130000075354474}, {"x": 100, "y": 0.011148000112370937}, {"x": 100, "y": 0.017148000097222393}, {"x": 100, "y": 0.020185000266792485}], "name": "direct_iter.runs", "showInLegend": false, "type": "scatter"}, {"color": "#1f77b4", "dataPoints": [{"x": 1, "y": 0.005926000000044951}, {"x": 10, "y": 0.007591999995781862}, {"x": 100, "y": 0.011130000075354474}, {"x": 1000, "y": 0.05938899994362146}, {"x": 10000, "y": 0.5192040000565612}, {"x": 100000, "y": 5.39949999995315}, {"x": 500000, "y": 26.108907000001125}], "name": "direct_iter", "showInLegend": true, "type": "spline"}, {"color": "#ff7f0e", "dataPoints": [{"x": 100, "y": 0.015240999999832638}, {"x": 100, "y": 0.01950000000761065}, {"x": 100, "y": 0.027722999675461324}, {"x": 100, "y": 0.016739999864512356}, {"x": 100, "y": 0.016352000329789007}, {"x": 1000, "y": 0.08388900000255717}, {"x": 1000, "y": 0.08407399997167886}, {"x": 1000, "y": 0.07942499996715924}, {"x": 1000, "y": 0.09370399993713363}, {"x": 1000, "y": 0.08035099972403259}, {"x": 1, "y": 0.009797000018352264}, {"x": 1, "y": 0.01188900000670401}, {"x": 1, "y": 0.009056000180862611}, {"x": 1, "y": 0.015777000044181477}, {"x": 1, "y": 0.021648000256391242}, {"x": 10, "y": 0.018333000014081335}, {"x": 10, "y": 0.012851999997565144}, {"x": 10, "y": 0.019110999801341677}, {"x": 10, "y": 0.02174099972762633}, {"x": 10, "y": 0.01975899976969231}, {"x": 10000, "y": 0.6925369999635222}, {"x": 10000, "y": 0.7016669999302394}, {"x": 10000, "y": 0.7192590001068311}, {"x": 10000, "y": 0.7371659999080293}, {"x": 10000, "y": 0.7200929999271466}, {"x": 500000, "y": 55.80618500016499}, {"x": 500000, "y": 55.3673520000757}, {"x": 500000, "y": 56.84174099997108}, {"x": 500000, "y": 57.70879600004264}, {"x": 500000, "y": 58.46999999994296}, {"x": 100000, "y": 9.948797000106424}, {"x": 100000, "y": 10.365036000166583}, {"x": 100000, "y": 10.075146999952267}, {"x": 100000, "y": 10.390351999831182}, {"x": 100000, "y": 10.222055000213004}], "name": "list_iter.runs", "showInLegend": false, "type": "scatter"}, {"color": "#ff7f0e", "dataPoints": [{"x": 1, "y": 0.009056000180862611}, {"x": 10, "y": 0.012851999997565144}, {"x": 100, "y": 0.015240999999832638}, {"x": 1000, "y": 0.07942499996715924}, {"x": 10000, "y": 0.6925369999635222}, {"x": 100000, "y": 9.948797000106424}, {"x": 500000, "y": 55.3673520000757}], "name": "list_iter", "showInLegend": true, "type": "spline"}, {"color": "#d62728", "dataPoints": [{"x": 100, "y": 0.012593000001004384}, {"x": 100, "y": 0.014073999864194775}, {"x": 100, "y": 0.02127800007656333}, {"x": 100, "y": 0.01612899995961925}, {"x": 100, "y": 0.011704000371537404}, {"x": 10000, "y": 0.5429260000013869}, {"x": 10000, "y": 0.528426000073523}, {"x": 10000, "y": 0.5387779997363396}, {"x": 10000, "y": 0.5294450002111262}, {"x": 10000, "y": 0.5513890000656829}, {"x": 10, "y": 0.008684999954766681}, {"x": 10, "y": 0.020147999975961284}, {"x": 10, "y": 0.007889000016803038}, {"x": 10, "y": 0.019129999600409064}, {"x": 10, "y": 0.008888999673217768}, {"x": 1000, "y": 0.05916699996078023}, {"x": 1000, "y": 0.06442599988076836}, {"x": 1000, "y": 0.06549999989147182}, {"x": 1000, "y": 0.06440700008170097}, {"x": 1000, "y": 0.06533400028274627}, {"x": 100000, "y": 5.845999999962714}, {"x": 100000, "y": 5.9703150000132155}, {"x": 100000, "y": 6.00311099992723}, {"x": 100000, "y": 6.204407000041101}, {"x": 100000, "y": 6.296000000020285}, {"x": 500000, "y": 29.13872200019796}, {"x": 500000, "y": 30.08064799996646}, {"x": 500000, "y": 29.708834000075512}, {"x": 500000, "y": 30.691313999795966}, {"x": 500000, "y": 32.281667000006564}, {"x": 1, "y": 0.015443999927811092}, {"x": 1, "y": 0.008815000001050066}, {"x": 1, "y": 0.018852000266633695}, {"x": 1, "y": 0.008426000022154767}, {"x": 1, "y": 0.007093000021995977}], "name": "iter_keys.runs", "showInLegend": false, "type": "scatter"}, {"color": "#d62728", "dataPoints": [{"x": 1, "y": 0.007093000021995977}, {"x": 10, "y": 0.007889000016803038}, {"x": 100, "y": 0.011704000371537404}, {"x": 1000, "y": 0.05916699996078023}, {"x": 10000, "y": 0.528426000073523}, {"x": 100000, "y": 5.845999999962714}, {"x": 500000, "y": 29.13872200019796}], "name": "iter_keys", "showInLegend": true, "type": "spline"}, {"color": "#2ca02c", "dataPoints": [{"x": 1000, "y": 1.1922600000033867}, {"x": 1000, "y": 1.181407999865769}, {"x": 1000, "y": 1.1666849995890516}, {"x": 1000, "y": 1.168462999885378}, {"x": 1000, "y": 1.1910560001524573}, {"x": 500000, "y": 331311.127116}, {"x": 500000, "y": 331800.7200919999}, {"x": 500000, "y": 330574.98522500007}, {"x": 500000, "y": 326436.172961}, {"x": 500000, "y": 327467.2515970001}, {"x": 10, "y": 0.010370999973474682}, {"x": 10, "y": 0.01924000002873072}, {"x": 10, "y": 0.01307399998040637}, {"x": 10, "y": 0.011649000043689739}, {"x": 10, "y": 0.021445000129460823}, {"x": 10000, "y": 103.62429500003145}, {"x": 10000, "y": 103.80598199998303}, {"x": 10000, "y": 103.70037100000218}, {"x": 10000, "y": 103.62442399991778}, {"x": 10000, "y": 103.6762390003787}, {"x": 100000, "y": 11565.268658999968}, {"x": 100000, "y": 11354.711147999751}, {"x": 100000, "y": 11309.325051000087}, {"x": 100000, "y": 11300.574796000092}, {"x": 100000, "y": 11277.76637099987}, {"x": 1, "y": 0.01120399997489585}, {"x": 1, "y": 0.020443999801500468}, {"x": 1, "y": 0.009184999726130627}, {"x": 1, "y": 0.009019000117405085}, {"x": 1, "y": 0.017055000171239953}, {"x": 100, "y": 0.03313000024718349}, {"x": 100, "y": 0.04014799969809246}, {"x": 100, "y": 0.03418500000407221}, {"x": 100, "y": 0.03270399975008331}, {"x": 100, "y": 0.03327800004626624}], "name": "keys_index(*).runs", "showInLegend": false, "type": "scatter"}, {"color": "#2ca02c", "dataPoints": [{"x": 1, "y": 0.009019000117405085}, {"x": 10, "y": 0.010370999973474682}, {"x": 100, "y": 0.03270399975008331}, {"x": 1000, "y": 1.1666849995890516}, {"x": 10000, "y": 103.62429500003145}, {"x": 100000, "y": 11277.76637099987}, {"x": 500000, "y": 326436.172961}], "name": "keys_index(*)", "showInLegend": true, "type": "spline"}, {"color": "#8c564b", "dataPoints": [{"x": 10000, "y": 2.191517999960979}, {"x": 10000, "y": 1.6878149999683956}, {"x": 10000, "y": 1.6487780001170904}, {"x": 10000, "y": 1.7215929997291823}, {"x": 10000, "y": 2.069982000193704}, {"x": 500000, "y": 100.30468599995856}, {"x": 500000, "y": 105.1009069999509}, {"x": 500000, "y": 108.00003700023808}, {"x": 500000, "y": 108.45375999997486}, {"x": 500000, "y": 108.6600539997562}, {"x": 1000, "y": 0.170276999995167}, {"x": 1000, "y": 0.17522200005259947}, {"x": 1000, "y": 0.1761480000368465}, {"x": 1000, "y": 0.16724099987186491}, {"x": 1000, "y": 0.16909199985093437}, {"x": 100000, "y": 19.421500000021297}, {"x": 100000, "y": 20.091499000045587}, {"x": 100000, "y": 20.390832999964914}, {"x": 100000, "y": 19.999369999823102}, {"x": 100000, "y": 20.406759999787027}, {"x": 10, "y": 0.01612899995961925}, {"x": 10, "y": 0.014574000033462653}, {"x": 10, "y": 0.010721999842644436}, {"x": 10, "y": 0.02168500031984877}, {"x": 10, "y": 0.016555999991396675}, {"x": 1, "y": 0.013999999964653398}, {"x": 1, "y": 0.011980999715888174}, {"x": 1, "y": 0.02424100011921837}, {"x": 1, "y": 0.012574000265885843}, {"x": 1, "y": 0.012463000075513264}, {"x": 100, "y": 0.026574000003165565}, {"x": 100, "y": 0.026387999696453335}, {"x": 100, "y": 0.028184999791847076}, {"x": 100, "y": 0.036796000131289475}, {"x": 100, "y": 0.02614799996081274}], "name": "list_index.runs", "showInLegend": false, "type": "scatter"}, {"color": "#8c564b", "dataPoints": [{"x": 1, "y": 0.011980999715888174}, {"x": 10, "y": 0.010721999842644436}, {"x": 100, "y": 0.02614799996081274}, {"x": 1000, "y": 0.16724099987186491}, {"x": 10000, "y": 1.6487780001170904}, {"x": 100000, "y": 19.421500000021297}, {"x": 500000, "y": 100.30468599995856}], "name": "list_index", "showInLegend": true, "type": "spline"}]}, {"cls": "GetMiddleValue", "series": [{"color": "#1f77b4", "dataPoints": [{"x": 500000, "y": 58.434500000004164}, {"x": 500000, "y": 52.95642599998018}, {"x": 500000, "y": 52.710962999753974}, {"x": 500000, "y": 52.76357399998233}, {"x": 500000, "y": 52.6510380000218}, {"x": 100, "y": 0.018482000001540655}, {"x": 100, "y": 0.017555999988871918}, {"x": 100, "y": 0.023055999918142334}, {"x": 100, "y": 0.022666999939247034}, {"x": 100, "y": 0.023130000045057386}, {"x": 1, "y": 0.008370000003310452}, {"x": 1, "y": 0.007796000090820598}, {"x": 1, "y": 0.0059809999584103934}, {"x": 1, "y": 0.008759000138525153}, {"x": 1, "y": 0.00744399994800915}, {"x": 10, "y": 0.011667000023862784}, {"x": 10, "y": 0.012296000022615772}, {"x": 10, "y": 0.009482000223215437}, {"x": 10, "y": 0.009462999969400698}, {"x": 10, "y": 0.01126000006479444}, {"x": 1000, "y": 0.10848199997326446}, {"x": 1000, "y": 0.10279699995408009}, {"x": 1000, "y": 0.11574000018299557}, {"x": 1000, "y": 0.09818500029723509}, {"x": 1000, "y": 0.0966300003710785}, {"x": 100000, "y": 10.118981999994503}, {"x": 100000, "y": 10.119406999933744}, {"x": 100000, "y": 10.290184999803387}, {"x": 100000, "y": 10.096369999700983}, {"x": 100000, "y": 10.140148000118643}, {"x": 10000, "y": 0.9743890000208921}, {"x": 10000, "y": 0.9871849999854021}, {"x": 10000, "y": 0.9864809999271529}, {"x": 10000, "y": 1.1086300000897609}, {"x": 10000, "y": 0.9821850003390864}], "name": "iter_2.runs", "showInLegend": false, "type": "scatter"}, {"color": "#1f77b4", "dataPoints": [{"x": 1, "y": 0.0059809999584103934}, {"x": 10, "y": 0.009462999969400698}, {"x": 100, "y": 0.017555999988871918}, {"x": 1000, "y": 0.0966300003710785}, {"x": 10000, "y": 0.9743890000208921}, {"x": 100000, "y": 10.096369999700983}, {"x": 500000, "y": 52.6510380000218}], "name": "iter_2", "showInLegend": true, "type": "spline"}, {"color": "#2ca02c", "dataPoints": [{"x": 1000, "y": 0.011981999996635295}, {"x": 1000, "y": 0.007203999999205735}, {"x": 1000, "y": 0.008925999736675294}, {"x": 1000, "y": 0.008406999768340029}, {"x": 1000, "y": 0.009740999757923419}, {"x": 10, "y": 0.008536999999364525}, {"x": 10, "y": 0.008278000223072013}, {"x": 10, "y": 0.00725900008546887}, {"x": 10, "y": 0.007463000201823888}, {"x": 10, "y": 0.0224079999497917}, {"x": 100, "y": 0.008777999994435959}, {"x": 100, "y": 0.00794499999301479}, {"x": 100, "y": 0.010351000128139276}, {"x": 100, "y": 0.0075930001912638545}, {"x": 100, "y": 0.009850999958871398}, {"x": 10000, "y": 0.025832999995145656}, {"x": 10000, "y": 0.02294499995514343}, {"x": 10000, "y": 0.018425999996907194}, {"x": 10000, "y": 0.026185000024270266}, {"x": 10000, "y": 0.020203999611112522}, {"x": 100000, "y": 0.3838150000206042}, {"x": 100000, "y": 0.4052969999861489}, {"x": 100000, "y": 0.41642500002581073}, {"x": 100000, "y": 0.44996299993727007}, {"x": 100000, "y": 0.37118499994903686}, {"x": 500000, "y": 1.3150560000099176}, {"x": 500000, "y": 1.3267970000470086}, {"x": 500000, "y": 1.322000000072876}, {"x": 500000, "y": 1.266704000045138}, {"x": 500000, "y": 1.3627409998662188}, {"x": 1, "y": 0.007313999958569184}, {"x": 1, "y": 0.008389000186070916}, {"x": 1, "y": 0.008444999821222154}, {"x": 1, "y": 0.006980999842198798}, {"x": 1, "y": 0.011240999810979702}], "name": "proposed(*).runs", "showInLegend": false, "type": "scatter"}, {"color": "#2ca02c", "dataPoints": [{"x": 1, "y": 0.006980999842198798}, {"x": 10, "y": 0.00725900008546887}, {"x": 100, "y": 0.0075930001912638545}, {"x": 1000, "y": 0.007203999999205735}, {"x": 10000, "y": 0.018425999996907194}, {"x": 100000, "y": 0.37118499994903686}, {"x": 500000, "y": 1.266704000045138}], "name": "proposed(*)", "showInLegend": true, "type": "spline"}, {"color": "#d62728", "dataPoints": [{"x": 100000, "y": 1.052649000001793}, {"x": 100000, "y": 1.060982000126387}, {"x": 100000, "y": 1.0560739999618818}, {"x": 100000, "y": 1.0524819999773172}, {"x": 100000, "y": 1.0526109999773325}, {"x": 500000, "y": 5.193703999999855}, {"x": 500000, "y": 5.163832999869555}, {"x": 500000, "y": 5.177388999982213}, {"x": 500000, "y": 5.223184999977093}, {"x": 500000, "y": 5.206369999996241}, {"x": 1, "y": 0.02392599998302103}, {"x": 1, "y": 0.013500000022759195}, {"x": 1, "y": 0.01955500010808464}, {"x": 1, "y": 0.013387999842962017}, {"x": 1, "y": 0.01546300018162583}, {"x": 10000, "y": 0.12429599996721663}, {"x": 10000, "y": 0.12124099998800375}, {"x": 10000, "y": 0.12190799998279545}, {"x": 10000, "y": 0.13524099995265715}, {"x": 10000, "y": 0.12138900001446018}, {"x": 1000, "y": 0.02048100003548825}, {"x": 1000, "y": 0.038851999988764874}, {"x": 1000, "y": 0.027851000140799442}, {"x": 1000, "y": 0.024204000055760844}, {"x": 1000, "y": 0.02559199992901995}, {"x": 100, "y": 0.02385200014032307}, {"x": 100, "y": 0.01727800008666236}, {"x": 100, "y": 0.015389000054710777}, {"x": 100, "y": 0.01585200016052113}, {"x": 100, "y": 0.015314999927795725}, {"x": 10, "y": 0.014684999996461556}, {"x": 10, "y": 0.021129999822733225}, {"x": 10, "y": 0.013129000308254035}, {"x": 10, "y": 0.0236479995692207}, {"x": 10, "y": 0.015351000001828652}], "name": "use_iter.runs", "showInLegend": false, "type": "scatter"}, {"color": "#d62728", "dataPoints": [{"x": 1, "y": 0.013387999842962017}, {"x": 10, "y": 0.013129000308254035}, {"x": 100, "y": 0.015314999927795725}, {"x": 1000, "y": 0.02048100003548825}, {"x": 10000, "y": 0.12124099998800375}, {"x": 100000, "y": 1.0524819999773172}, {"x": 500000, "y": 5.163832999869555}], "name": "use_iter", "showInLegend": true, "type": "spline"}, {"color": "#9467bd", "dataPoints": [{"x": 10000, "y": 0.2441120000042929}, {"x": 10000, "y": 0.23775899990141625}, {"x": 10000, "y": 0.24631500014038465}, {"x": 10000, "y": 0.25135200030490523}, {"x": 10000, "y": 0.24748099986027228}, {"x": 1000, "y": 0.037813999995250924}, {"x": 1000, "y": 0.036832999967373325}, {"x": 1000, "y": 0.033629999961704016}, {"x": 1000, "y": 0.03785199987760279}, {"x": 1000, "y": 0.04487099977268372}, {"x": 500000, "y": 14.569833999985349}, {"x": 500000, "y": 14.490110999986427}, {"x": 500000, "y": 14.447628999960216}, {"x": 500000, "y": 14.47738799970466}, {"x": 500000, "y": 14.47244499968292}, {"x": 1, "y": 0.019073999965257826}, {"x": 1, "y": 0.01966599984370987}, {"x": 1, "y": 0.01401899999109446}, {"x": 1, "y": 0.01220399963131058}, {"x": 1, "y": 0.020944999960192945}, {"x": 10, "y": 0.011981999932686449}, {"x": 10, "y": 0.009240000053978292}, {"x": 10, "y": 0.01598099993316282}, {"x": 10, "y": 0.009908000265568262}, {"x": 10, "y": 0.01259300006495323}, {"x": 100, "y": 0.020944999960192945}, {"x": 100, "y": 0.011314000403217506}, {"x": 100, "y": 0.021777999791083857}, {"x": 100, "y": 0.018500000351195922}, {"x": 100, "y": 0.019500000234984327}, {"x": 100000, "y": 2.3169070000221836}, {"x": 100000, "y": 2.336573999855318}, {"x": 100000, "y": 2.2805930002505193}, {"x": 100000, "y": 2.2869629997330776}, {"x": 100000, "y": 2.275037000345037}], "name": "use_list.runs", "showInLegend": false, "type": "scatter"}, {"color": "#9467bd", "dataPoints": [{"x": 1, "y": 0.01220399963131058}, {"x": 10, "y": 0.009240000053978292}, {"x": 100, "y": 0.011314000403217506}, {"x": 1000, "y": 0.033629999961704016}, {"x": 10000, "y": 0.23775899990141625}, {"x": 100000, "y": 2.275037000345037}, {"x": 500000, "y": 14.447628999960216}], "name": "use_list", "showInLegend": true, "type": "spline"}]}, {"cls": "RandomChoice", "series": [{"color": "#1f77b4", "dataPoints": [{"x": 1000, "y": 0.1493339999996124}, {"x": 1000, "y": 0.14799999996739643}, {"x": 1000, "y": 0.14081400001941802}, {"x": 1000, "y": 0.13450000005832408}, {"x": 1000, "y": 0.14118499984761002}, {"x": 1, "y": 0.01920300000080033}, {"x": 1, "y": 0.016054999832704198}, {"x": 1, "y": 0.0326479998875584}, {"x": 1, "y": 0.015538000297965482}, {"x": 1, "y": 0.020480999864957994}, {"x": 100000, "y": 28.78244400000085}, {"x": 100000, "y": 28.936295999983486}, {"x": 100000, "y": 31.59668600005716}, {"x": 100000, "y": 30.570924999892668}, {"x": 100000, "y": 31.2091670002701}, {"x": 10000, "y": 2.9497790000050372}, {"x": 10000, "y": 3.030684999885125}, {"x": 10000, "y": 3.5272220002298127}, {"x": 10000, "y": 2.808852000271145}, {"x": 10000, "y": 3.3647219997874345}, {"x": 100, "y": 0.03548099994077347}, {"x": 100, "y": 0.030130000141070923}, {"x": 100, "y": 0.025129000050583272}, {"x": 100, "y": 0.034370000093986164}, {"x": 100, "y": 0.04037000007883762}, {"x": 500000, "y": 146.9006279999121}, {"x": 500000, "y": 148.80596299985882}, {"x": 500000, "y": 154.40836800007673}, {"x": 500000, "y": 155.0520359996881}, {"x": 500000, "y": 157.44366499984608}, {"x": 10, "y": 0.03007399982379866}, {"x": 10, "y": 0.029389000019364175}, {"x": 10, "y": 0.02759300014076871}, {"x": 10, "y": 0.027147999844601145}, {"x": 10, "y": 0.024128999939421192}], "name": "use_list.runs", "showInLegend": false, "type": "scatter"}, {"color": "#1f77b4", "dataPoints": [{"x": 1, "y": 0.015538000297965482}, {"x": 10, "y": 0.024128999939421192}, {"x": 100, "y": 0.025129000050583272}, {"x": 1000, "y": 0.13450000005832408}, {"x": 10000, "y": 2.808852000271145}, {"x": 100000, "y": 28.78244400000085}, {"x": 500000, "y": 146.9006279999121}], "name": "use_list", "showInLegend": true, "type": "spline"}, {"color": "#2ca02c", "dataPoints": [{"x": 1, "y": 0.018797000002734876}, {"x": 1, "y": 0.014610999983233341}, {"x": 1, "y": 0.023388999579765368}, {"x": 1, "y": 0.020278000192774925}, {"x": 1, "y": 0.020851000044785906}, {"x": 100000, "y": 0.2715560000012829}, {"x": 100000, "y": 0.07216700032586232}, {"x": 100000, "y": 0.03370399963387172}, {"x": 100000, "y": 0.05955599999651895}, {"x": 100000, "y": 0.4247769998073636}, {"x": 10, "y": 0.019999999949504854}, {"x": 10, "y": 0.022962999992159894}, {"x": 10, "y": 0.022074000071370392}, {"x": 10, "y": 0.012556000001495704}, {"x": 10, "y": 0.02720399970712606}, {"x": 500000, "y": 1.933851999979197}, {"x": 500000, "y": 1.9847410000011223}, {"x": 500000, "y": 0.9989999999788779}, {"x": 500000, "y": 1.9686480000018491}, {"x": 500000, "y": 0.6264820003707428}, {"x": 100, "y": 0.022241000010581047}, {"x": 100, "y": 0.019778000023507047}, {"x": 100, "y": 0.01525899961052346}, {"x": 100, "y": 0.027130000034958357}, {"x": 100, "y": 0.026018999960797373}, {"x": 10000, "y": 0.034314999993512174}, {"x": 10000, "y": 0.04472200021155004}, {"x": 10000, "y": 0.04349999994701648}, {"x": 10000, "y": 0.049573999604035635}, {"x": 10000, "y": 0.029611000172735658}, {"x": 1000, "y": 0.020444999790925067}, {"x": 1000, "y": 0.019536999843694502}, {"x": 1000, "y": 0.019629999769676942}, {"x": 1000, "y": 0.021611000192933716}, {"x": 1000, "y": 0.0198520001504221}], "name": "proposed(*).runs", "showInLegend": false, "type": "scatter"}, {"color": "#2ca02c", "dataPoints": [{"x": 1, "y": 0.014610999983233341}, {"x": 10, "y": 0.012556000001495704}, {"x": 100, "y": 0.01525899961052346}, {"x": 1000, "y": 0.019536999843694502}, {"x": 10000, "y": 0.029611000172735658}, {"x": 100000, "y": 0.03370399963387172}, {"x": 500000, "y": 0.6264820003707428}], "name": "proposed(*)", "showInLegend": true, "type": "spline"}]}, {"cls": "RepeatedAccess", "series": [{"color": "#1f77b4", "dataPoints": [{"x": 1, "y": 12.17624099999881}, {"x": 1, "y": 12.177740999959497}, {"x": 1, "y": 12.17551799982175}, {"x": 1, "y": 12.1815190000234}, {"x": 1, "y": 12.167554999905406}, {"x": 100000, "y": 62.55312899997989}, {"x": 100000, "y": 65.31399900001134}, {"x": 100000, "y": 65.34164799995779}, {"x": 100000, "y": 71.37529500005257}, {"x": 100000, "y": 70.02459300019837}, {"x": 1000, "y": 13.909629000011137}, {"x": 1000, "y": 13.766240999984802}, {"x": 1000, "y": 14.255851999905644}, {"x": 1000, "y": 14.253611000185629}, {"x": 1000, "y": 14.590740999665286}, {"x": 100, "y": 12.419630000010784}, {"x": 100, "y": 12.352426000006744}, {"x": 100, "y": 12.482129000090936}, {"x": 100, "y": 12.337352000031387}, {"x": 100, "y": 12.454740000066522}, {"x": 10000, "y": 23.256149000019377}, {"x": 10000, "y": 22.80150000001413}, {"x": 10000, "y": 24.896463000004587}, {"x": 10000, "y": 24.130816000024424}, {"x": 10000, "y": 24.436943999717187}, {"x": 500000, "y": 193.70714600000838}, {"x": 500000, "y": 196.34011200014356}, {"x": 500000, "y": 198.37916599999517}, {"x": 500000, "y": 201.80733200004397}, {"x": 500000, "y": 201.12264800036428}, {"x": 10, "y": 12.52957500003049}, {"x": 10, "y": 12.509944000157702}, {"x": 10, "y": 12.568239999836806}, {"x": 10, "y": 12.960962999841286}, {"x": 10, "y": 12.544871000045532}], "name": "use_list.runs", "showInLegend": false, "type": "scatter"}, {"color": "#1f77b4", "dataPoints": [{"x": 1, "y": 12.167554999905406}, {"x": 10, "y": 12.509944000157702}, {"x": 100, "y": 12.337352000031387}, {"x": 1000, "y": 13.766240999984802}, {"x": 10000, "y": 22.80150000001413}, {"x": 100000, "y": 62.55312899997989}, {"x": 500000, "y": 193.70714600000838}], "name": "use_list", "showInLegend": true, "type": "spline"}, {"color": "#2ca02c", "dataPoints": [{"x": 1000, "y": 133.20609099999814}, {"x": 1000, "y": 132.40288900010455}, {"x": 1000, "y": 135.01550000000861}, {"x": 1000, "y": 132.91285100012828}, {"x": 1000, "y": 132.26036900005056}, {"x": 10, "y": 26.460498999995252}, {"x": 10, "y": 26.619704000040656}, {"x": 10, "y": 26.486167000030036}, {"x": 10, "y": 26.609500000176922}, {"x": 10, "y": 26.602017999721284}, {"x": 500000, "y": 68114.24473299997}, {"x": 500000, "y": 68064.03611499991}, {"x": 500000, "y": 67273.02797199991}, {"x": 500000, "y": 67152.68319000007}, {"x": 500000, "y": 66932.5038699999}, {"x": 100, "y": 35.25033299996494}, {"x": 100, "y": 35.61725800000204}, {"x": 100, "y": 35.223332999976265}, {"x": 100, "y": 35.237277999840444}, {"x": 100, "y": 35.95657400001073}, {"x": 100000, "y": 11489.917982999941}, {"x": 100000, "y": 11779.592377999961}, {"x": 100000, "y": 11459.335827999894}, {"x": 100000, "y": 11486.971083000299}, {"x": 100000, "y": 11504.160544000115}, {"x": 10000, "y": 1062.9014200001166}, {"x": 10000, "y": 1064.1647510001349}, {"x": 10000, "y": 1063.8013980001233}, {"x": 10000, "y": 1062.8603290001593}, {"x": 10000, "y": 1063.467959999798}, {"x": 1, "y": 23.856350999722054}, {"x": 1, "y": 23.913776999961556}, {"x": 1, "y": 23.96644500004186}, {"x": 1, "y": 23.84155500021734}, {"x": 1, "y": 23.829019000004337}], "name": "proposed(*).runs", "showInLegend": false, "type": "scatter"}, {"color": "#2ca02c", "dataPoints": [{"x": 1, "y": 23.829019000004337}, {"x": 10, "y": 26.460498999995252}, {"x": 100, "y": 35.223332999976265}, {"x": 1000, "y": 132.26036900005056}, {"x": 10000, "y": 1062.8603290001593}, {"x": 100000, "y": 11459.335827999894}, {"x": 500000, "y": 66932.5038699999}], "name": "proposed(*)", "showInLegend": true, "type": "spline"}]}, {"cls": "RandomSample", "series": [{"color": "#2ca02c", "dataPoints": [{"x": 10000, "y": 8.262184999999533}, {"x": 10000, "y": 8.199537000002977}, {"x": 10000, "y": 8.083758999987367}, {"x": 10000, "y": 8.027537000089069}, {"x": 10000, "y": 7.790832999944541}, {"x": 500000, "y": 187.02277799999933}, {"x": 500000, "y": 160.06648199999063}, {"x": 500000, "y": 163.76737100000582}, {"x": 500000, "y": 184.63127800032453}, {"x": 500000, "y": 185.02018499975748}, {"x": 100000, "y": 35.81324000000308}, {"x": 100000, "y": 36.734349999960614}, {"x": 100000, "y": 41.05149999986679}, {"x": 100000, "y": 40.549387999817554}, {"x": 100000, "y": 43.579482000041025}, {"x": 100, "y": 0.30357400004277224}, {"x": 100, "y": 0.29679600004328677}, {"x": 100, "y": 0.3130189998046262}, {"x": 100, "y": 0.3034999999727006}, {"x": 100, "y": 0.3075180002269917}, {"x": 1000, "y": 2.2921290000113004}, {"x": 1000, "y": 2.313702999799716}, {"x": 1000, "y": 2.299814999787486}, {"x": 1000, "y": 2.3080559999471006}, {"x": 1000, "y": 2.2766480001337186}, {"x": 10, "y": 0.11581499995827471}, {"x": 10, "y": 0.11655499997687002}, {"x": 10, "y": 0.09175900004265714}, {"x": 10, "y": 0.1189629997497832}, {"x": 10, "y": 0.10977800002365257}, {"x": 1, "y": 0.09342599992123723}, {"x": 1, "y": 0.0787779999882332}, {"x": 1, "y": 0.08081499981926754}, {"x": 1, "y": 0.06390700036718044}, {"x": 1, "y": 0.07094500006132876}], "name": "proposed(*).runs", "showInLegend": false, "type": "scatter"}, {"color": "#2ca02c", "dataPoints": [{"x": 1, "y": 0.06390700036718044}, {"x": 10, "y": 0.09175900004265714}, {"x": 100, "y": 0.29679600004328677}, {"x": 1000, "y": 2.2766480001337186}, {"x": 10000, "y": 7.790832999944541}, {"x": 100000, "y": 35.81324000000308}, {"x": 500000, "y": 160.06648199999063}], "name": "proposed(*)", "showInLegend": true, "type": "spline"}, {"color": "#ff7f0e", "dataPoints": [{"x": 1, "y": 0.054443999999875814}, {"x": 1, "y": 0.051240999994206504}, {"x": 1, "y": 0.05276000001686043}, {"x": 1, "y": 0.046611000016127946}, {"x": 1, "y": 0.05125899997437955}, {"x": 100000, "y": 32.51975900002435}, {"x": 100000, "y": 33.977797000034116}, {"x": 100000, "y": 34.05766700007007}, {"x": 100000, "y": 36.31626000014876}, {"x": 100000, "y": 36.52555700000448}, {"x": 100, "y": 0.2690929999857872}, {"x": 100, "y": 0.2704260000427894}, {"x": 100, "y": 0.26823999996850034}, {"x": 100, "y": 0.25827799981925637}, {"x": 100, "y": 0.2617400000417547}, {"x": 10000, "y": 7.558313999993516}, {"x": 10000, "y": 8.210907000147927}, {"x": 10000, "y": 7.884313999966253}, {"x": 10000, "y": 8.294647999719018}, {"x": 10000, "y": 8.315852000123414}, {"x": 500000, "y": 151.57483400003002}, {"x": 500000, "y": 155.5884239999159}, {"x": 500000, "y": 156.60881399981008}, {"x": 500000, "y": 158.41440600024725}, {"x": 500000, "y": 187.9715540003417}, {"x": 1000, "y": 2.2317589996418974}, {"x": 1000, "y": 2.270684999984951}, {"x": 1000, "y": 2.2011480000401207}, {"x": 1000, "y": 2.1645189999617287}, {"x": 1000, "y": 2.218758999788406}, {"x": 10, "y": 0.07248099973367061}, {"x": 10, "y": 0.07825900001989794}, {"x": 10, "y": 0.0915739997253695}, {"x": 10, "y": 0.07659299990336876}, {"x": 10, "y": 0.08385199998883763}], "name": "use_list.runs", "showInLegend": false, "type": "scatter"}, {"color": "#ff7f0e", "dataPoints": [{"x": 1, "y": 0.046611000016127946}, {"x": 10, "y": 0.07248099973367061}, {"x": 100, "y": 0.25827799981925637}, {"x": 1000, "y": 2.1645189999617287}, {"x": 10000, "y": 7.558313999993516}, {"x": 100000, "y": 32.51975900002435}, {"x": 500000, "y": 151.57483400003002}], "name": "use_list", "showInLegend": true, "type": "spline"}]}];
+	const charts = [];
+
+	document.addEventListener('DOMContentLoaded', function() {
+		chart_data.forEach(function(data) {
+			const element_id = 'graph-' + data.cls;
+			document.getElementById(element_id).classList.remove('loading');
+			const chart = new CanvasJS.Chart(element_id, {
+				axisX:{
+					logarithmic: true,
+					titleFontSize: 14,
+					title: "Items in dict (log scale)", 
+					labelFontSize: 12
+				},
+				axisY:{
+					logarithmic: true,
+					titleFontSize: 14,
+					title: "Runtime (ms)", 
+					labelFontSize: 12
+				},
+    			legend: {
+                	cursor: "pointer",
+                	fontSize: 13,
+	                itemclick: function (e) {
+	                	const companion_name = e.dataSeries.name + ".runs";
+	                	const companion_series = e.chart.data.filter(function(ds) { 
+	                		return ds.name == companion_name 
+	                	})[0];
+
+	                	const is_visible = (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible);
+	                	const visibility = is_visible ? false : true;
+
+	                    e.dataSeries.visible = visibility;
+	                    if (companion_series) {
+	                    	companion_series.set('visible', visibility);
+	                    }
+	                    e.chart.render();
+	                }
+            	},
+				
+
+				data: data.series
+
+			});
+			chart.render();
+			charts.push(chart);
+		});
+	});
+
+	const x_log = document.getElementById('x-log-check');
+	x_log.addEventListener('change', function(e) {
+		charts.forEach(function(chart) {
+			chart.axisX[0].set('logarithmic', x_log.checked);
+		})
+	});
+
+	const y_log = document.getElementById('y-log-check');
+	y_log.addEventListener('change', function(e) {
+		charts.forEach(function(chart) {
+			chart.axisY[0].set('logarithmic', y_log.checked);
+		})
+	});
+
+</script>
+
+</body>
