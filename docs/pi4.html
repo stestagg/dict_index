@@ -117,8 +117,6 @@
 .gd { color: #f92672 } /* Generic.Deleted */
 .ge { font-style: italic } /* Generic.Emph */
 .gi { color: #a6e22e } /* Generic.Inserted */
-.go { color: #66d9ef } /* Generic.Output */
-.gp { color: #f92672; font-weight: bold } /* Generic.Prompt */
 .gs { font-weight: bold } /* Generic.Strong */
 .gu { color: #75715e } /* Generic.Subheading */
 .kc { color: #66d9ef } /* Keyword.Constant */
@@ -339,7 +337,7 @@
 			
 			<div class=method>
 				<div class=name>use_list</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">use_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calling list on the dict</span>
@@ -351,7 +349,7 @@
 			
 			<div class=method>
 				<div class=name>use_iter</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">use_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calling iter on the keys</span>
@@ -363,7 +361,7 @@
 			
 			<div class=method>
 				<div class=name>proposed(*)</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">proposed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Using keys indexing</span>
@@ -477,7 +475,7 @@
 			
 			<div class=method>
 				<div class=name>use_list</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">use_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calling list on the dict</span>
@@ -489,7 +487,7 @@
 			
 			<div class=method>
 				<div class=name>use_iter</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">use_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calling iter on the view</span>
@@ -501,7 +499,7 @@
 			
 			<div class=method>
 				<div class=name>proposed(*)</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">proposed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Using view indexing</span>
@@ -615,7 +613,7 @@
 			
 			<div class=method>
 				<div class=name>use_list</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">use_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
@@ -624,7 +622,7 @@
 			
 			<div class=method>
 				<div class=name>use_iter</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">use_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
 </pre></div>
@@ -633,7 +631,7 @@
 			
 			<div class=method>
 				<div class=name>proposed(*)</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">proposed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
@@ -744,7 +742,7 @@
 			
 			<div class=method>
 				<div class=name>list_index</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">list_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; This is a bad way of doing this &quot;&quot;&quot;</span>
     <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
@@ -757,7 +755,7 @@
 			
 			<div class=method>
 				<div class=name>list_iter</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">list_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; This is a bad way of doing this &quot;&quot;&quot;</span>
     <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
@@ -770,7 +768,7 @@
 			
 			<div class=method>
 				<div class=name>direct_iter</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">direct_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
         <span class="n">last_key</span> <span class="o">=</span> <span class="n">key</span>
@@ -781,7 +779,7 @@
 			
 			<div class=method>
 				<div class=name>keys_index(*)</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">keys_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Using keys indexing. This approach is *not* recommended,</span>
@@ -798,7 +796,7 @@
 			
 			<div class=method>
 				<div class=name>iter_keys</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">iter_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Using the sensible iter()</span>
@@ -952,7 +950,7 @@
 			
 			<div class=method>
 				<div class=name>list_index</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">list_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; This is a bad way of doing this &quot;&quot;&quot;</span>
     <span class="n">items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
@@ -965,7 +963,7 @@
 			
 			<div class=method>
 				<div class=name>list_iter</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">list_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; This is a bad way of doing this &quot;&quot;&quot;</span>
     <span class="n">items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
@@ -978,7 +976,7 @@
 			
 			<div class=method>
 				<div class=name>direct_iter</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">direct_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">last_item</span> <span class="o">=</span> <span class="n">item</span>
@@ -989,7 +987,7 @@
 			
 			<div class=method>
 				<div class=name>items_index(*)</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">items_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Using items indexing. This approach is *not* recommended,</span>
@@ -1006,7 +1004,7 @@
 			
 			<div class=method>
 				<div class=name>iter_items</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">iter_items</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Using the sensible iter()</span>
@@ -1160,7 +1158,7 @@
 			
 			<div class=method>
 				<div class=name>use_list</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">use_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calling list on the dict</span>
@@ -1172,7 +1170,7 @@
 			
 			<div class=method>
 				<div class=name>use_iter</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">use_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calling iter on the keys</span>
@@ -1188,7 +1186,7 @@
 			
 			<div class=method>
 				<div class=name>iter_2</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">iter_2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Count over the iter results</span>
@@ -1204,7 +1202,7 @@
 			
 			<div class=method>
 				<div class=name>proposed(*)</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">proposed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Using keys indexing</span>
@@ -1337,7 +1335,7 @@
 			
 			<div class=method>
 				<div class=name>use_list</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">use_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_size</span><span class="p">)</span>
 </pre></div>
@@ -1346,7 +1344,7 @@
 			
 			<div class=method>
 				<div class=name>proposed(*)</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">proposed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_size</span><span class="p">)</span>
 </pre></div>
@@ -1438,7 +1436,7 @@
 			
 			<div class=method>
 				<div class=name>use_list</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">use_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
 </pre></div>
@@ -1447,7 +1445,7 @@
 			
 			<div class=method>
 				<div class=name>proposed(*)</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">proposed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
 </pre></div>
@@ -1539,7 +1537,7 @@
 			
 			<div class=method>
 				<div class=name>use_list</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">use_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">:</span>
@@ -1551,7 +1549,7 @@
 			
 			<div class=method>
 				<div class=name>proposed(*)</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">proposed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="n">items</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">indices</span><span class="p">:</span>
@@ -1646,7 +1644,7 @@
 			
 			<div class=method>
 				<div class=name>use_list</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">use_list</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
@@ -1655,7 +1653,7 @@
 			
 			<div class=method>
 				<div class=name>use_iter</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">use_iter</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
 </pre></div>
@@ -1664,7 +1662,7 @@
 			
 			<div class=method>
 				<div class=name>proposed(*)</div>
-				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test</span><span class="o">.</span><span class="n">method</span>
+				<div class=defn><div class="highlight"><pre><span></span><span class="nd">@Test.method</span>
 <span class="k">def</span> <span class="nf">proposed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 </pre></div>
